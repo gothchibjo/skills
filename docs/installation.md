@@ -1,9 +1,8 @@
 # Installation
 
 Every skill is a plain `SKILL.md` file with YAML frontmatter (`name`,
-`description`), so anything implementing the
-[Agent Skills spec](https://agentskills.io) can run them. Three setup paths,
-from least to most control.
+`description`), so anything implementing the [Agent Skills spec] can run them.
+Three setup paths, from least to most control.
 
 ## 1. The `skills` CLI (recommended)
 
@@ -80,12 +79,15 @@ Restart the agent session afterwards so it re-scans the skills directory.
 ## Commands are not installed by the CLI
 
 The `skills` CLI installs skills only. The OpenCode command wrappers in
-[`command/`](../command/) — `/commit` — have to be copied by hand:
+[`command/`] — `/commit`, `/requirements`, `/develop` — have to be copied by
+hand:
 
 ```bash
 REPO=https://raw.githubusercontent.com/gothchibjo/skills/main
 mkdir -p ~/.config/opencode/command
-curl -fsSL "$REPO/command/commit.md" -o ~/.config/opencode/command/commit.md
+for c in commit requirements develop; do
+  curl -fsSL "$REPO/command/$c.md" -o ~/.config/opencode/command/$c.md
+done
 ```
 
 Each one is a few lines: a description and a pointer to the matching skill.
@@ -100,3 +102,17 @@ npx skills add gothchibjo/skills --list   # what the repo offers
 In the agent itself, ask for the skill by name. A skill that does not appear is
 almost always a wrong directory, a missing `name`/`description` in the
 frontmatter, or a session that started before the file was copied.
+
+## Requirements pipeline
+
+`req-workflow` and `req-develop` write into `requirements/` in whichever project
+you are working in, and expect that directory to be a normal, committed part of
+that project. Nothing is global state. The development phase adds `04-plan.md`
+to the same folder. See the catalogue in the root [README] for the family and
+its gates.
+
+<!-- refs -->
+
+[Agent Skills spec]: https://agentskills.io
+[`command/`]: ../command/
+[README]: ../README.md

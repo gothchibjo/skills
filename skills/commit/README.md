@@ -38,7 +38,7 @@ existing message against the project's conventions.
 ## Usage
 
 Installed as a skill it can be invoked directly by name, or through the
-`/commit` command in [opencode](../../command/commit.md):
+`/commit` command in [opencode]:
 
 | Invocation     | Behaviour                          |
 | -------------- | ---------------------------------- |
@@ -72,7 +72,7 @@ curl -fsSL https://raw.githubusercontent.com/gothchibjo/skills/main/skills/commi
   -o ~/.config/opencode/skills/commit/SKILL.md
 ```
 
-See [docs/installation.md](../../docs/installation.md) for the full matrix.
+See [docs/installation.md] for the full matrix.
 
 ## Troubleshooting
 
@@ -85,4 +85,10 @@ See [docs/installation.md](../../docs/installation.md) for the full matrix.
 
 ## License
 
-MIT. See [LICENSE](../../LICENSE).
+MIT. See [LICENSE].
+
+<!-- refs -->
+
+[opencode]: ../../command/commit.md
+[docs/installation.md]: ../../docs/installation.md
+[LICENSE]: ../../LICENSE
