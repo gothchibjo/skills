@@ -1,14 +1,13 @@
 # grilling
 
-> Vendored from [`mattpocock/skills`] · © 2026 Matt Pocock
->
-> MIT licensed — see the [full notice] for provenance.
+> [SKILL.md] is vendored from [mattpocock/skills] — MIT, © 2026 Matt Pocock. See
+> [full notice].
 
 Interview the user relentlessly about a plan, decision, or idea until every
 branch of the design tree is resolved.
 
 **Model-invoked.** The agent can reach for this on its own, and it is also the
-implementation behind [`grill-me`] — a user-invoked wrapper around it. The split
+implementation behind [grill-me] — a user-invoked wrapper around it. The split
 is deliberate: a user-invoked skill orchestrates, a model-invoked skill holds
 the reusable discipline.
 
@@ -19,7 +18,7 @@ decisions that hang off it. The tree is worked in **rounds**, and each round
 asks the whole **frontier** — every decision whose prerequisites are already
 settled. Questions are numbered and each comes with a recommended answer.
 
-```
+```markdown
 ❓ **Q1** - **<question title>**: <question body>
 
 ➡️ <your recommended answer>
@@ -60,21 +59,16 @@ npx skills add gothchibjo/skills --skill grilling -g -a opencode
 
 See [docs/installation.md] for other methods.
 
-## Updating from upstream
-
-Vendored, not owned. The body is byte-identical to upstream at the commit
-recorded in the frontmatter. To update: re-fetch the upstream file, re-apply the
-frontmatter additions, re-run the diff. Do not edit the body. Details in
-[THIRD_PARTY_NOTICES.md].
-
 ## License
 
-MIT, © 2026 Matt Pocock. See [THIRD_PARTY_NOTICES.md].
+MIT, © 2026 Matt Pocock, for the vendored [SKILL.md]. See
+[THIRD_PARTY_NOTICES.md].
 
 <!-- refs -->
 
-[`mattpocock/skills`]: https://github.com/mattpocock/skills
+[SKILL.md]: SKILL.md
+[mattpocock/skills]: https://github.com/mattpocock/skills
 [full notice]: ../../THIRD_PARTY_NOTICES.md
-[`grill-me`]: ../grill-me/
+[grill-me]: ../grill-me/
 [docs/installation.md]: ../../docs/installation.md
 [THIRD_PARTY_NOTICES.md]: ../../THIRD_PARTY_NOTICES.md

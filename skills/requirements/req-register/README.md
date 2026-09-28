@@ -1,6 +1,6 @@
 # req-register
 
-Phase 1 of [`req-workflow`]: open a new PCR record from an incoming vision.
+Phase 1 of [req-workflow]: open a new PCR record from an incoming vision.
 
 **Not directly invocable.** The frontmatter sets
 `disable-model-invocation: true` — the agent will not reach for it, and it is
@@ -57,7 +57,7 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                            | Fix                                                                        |
-| ---------------------------------- | -------------------------------------------------------------------------- |
+| :--------------------------------- | :------------------------------------------------------------------------- |
 | Wrong id allocated                 | Ids come from directory names. Renaming a folder re-derives the next id.   |
 | It registered one PCR for a bundle | That is the default. Decline the split when you want one record instead.   |
 | Asking for language twice          | The values were supplied; the skill is told to infer from the vision text. |
@@ -68,6 +68,6 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-workflow`]: ../req-workflow/
+[req-workflow]: ../req-workflow/
 [docs/installation.md]: ../../../docs/installation.md
 [LICENSE]: ../../../LICENSE

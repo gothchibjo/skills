@@ -14,7 +14,7 @@ according to the arguments passed (no args, `push`).
 
 ## Commit message format
 
-```
+```text
 type(scope): imperative summary
 <blank line>
 - bullet describing key change

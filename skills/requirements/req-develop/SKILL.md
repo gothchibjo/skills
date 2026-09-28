@@ -16,7 +16,7 @@ metadata:
   protected: "true"
 ---
 
-# Development state machine: frozen spec → plan → guarded implementation → verified evidence
+# Development state machine: frozen spec → plan → guarded code → evidence
 
 One continuous, resumable process. Runs only in a repo whose
 `requirements/PCR-NNNN-<slug>/03-technical.yaml` is `frozen`. State lives in the
@@ -60,7 +60,7 @@ transient state set by req-guards on a guard violation and left via `resume`).
 ## 3. Classify the event (priority order)
 
 | User phrase →                                   | Event        | Valid from                | Result                                                        |
-| ----------------------------------------------- | ------------ | ------------------------- | ------------------------------------------------------------- |
+| :---------------------------------------------- | :----------- | :------------------------ | :------------------------------------------------------------ |
 | plan / plan the development / write a plan      | plan         | — (record must be frozen) | planning (04-plan.md written from the frozen spec)            |
 | plan looks good / plan approved / I approve     | plan_approve | planning                  | plan_approved (`plan_approval` gate passed)                   |
 | implement / start / continue / work on REQ-00x  | implement    | plan_approved, blocked    | implementing (guards pre-checked by req-guards)               |

@@ -1,6 +1,6 @@
 # req-technical-spec
 
-Phase 4 of [`req-workflow`]: turn business requirements into a machine-readable
+Phase 4 of [req-workflow]: turn business requirements into a machine-readable
 technical spec, and freeze it.
 
 **Not directly invocable.** The frontmatter sets
@@ -13,7 +13,7 @@ Two events, both in `03-technical.yaml`.
 **`technical` — generate.** Maps every `BR-<n>` to at least one `REQ-<nnn>`:
 
 | Field                 | Derived from                                                                                |
-| --------------------- | ------------------------------------------------------------------------------------------- |
+| :-------------------- | :------------------------------------------------------------------------------------------ |
 | `id`                  | Topological order — dependencies first, ties by BR order. Deterministic.                    |
 | `type`                | `functional` (a behavior), `non-functional`, `business-rule` (a rule), `constraint`         |
 | `description`         | One unambiguous EARS-style sentence: "WHEN \<trigger\>, THE SYSTEM SHALL \<outcome\>"       |
@@ -64,7 +64,7 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                            | Fix                                                                      |
-| ---------------------------------- | ------------------------------------------------------------------------ |
+| :--------------------------------- | :----------------------------------------------------------------------- |
 | Generation refused                 | The BR is still `draft`. It must reach `proposed` first.                 |
 | A `proposed` BR produced thin REQs | Expected — approve the BR, then regenerate for the full field set.       |
 | Freeze refused                     | Both conditions are named: approve the BR, or resolve the ledger.        |
@@ -76,6 +76,6 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-workflow`]: ../req-workflow/
+[req-workflow]: ../req-workflow/
 [docs/installation.md]: ../../../docs/installation.md
 [LICENSE]: ../../../LICENSE

@@ -1,7 +1,7 @@
 # req-plan
 
-Phase 2 of [`req-develop`]: write the execution plan from the frozen contract,
-and hold the human plan-approval gate (REQ-011).
+Phase 2 of [req-develop]: write the execution plan from the frozen contract, and
+hold the human plan-approval gate (REQ-011).
 
 **Not directly invocable.** The frontmatter sets
 `disable-model-invocation: true` — loaded only through the state machine.
@@ -29,12 +29,12 @@ not editable from here.
   `plan_approval` — implementation stays impossible until a human says so. This
   is the single most important property of the gate.
 - **The plan cannot bend the contract.** A task that needs a different REQ text
-  is a scope deviation: it is refused here and routed to [`req-workflow`] as
+  is a scope deviation: it is refused here and routed to [req-workflow] as
   change control (REQ-015), not absorbed into the plan.
 - **Re-planning is allowed and additive.** A second `plan` event drafts afresh;
   prior drafts are kept under a `Revisions` block. History is append-only.
-- **Guard conditions are named per REQ** so [`req-guards`] can check them
-  without re-deriving intent from the plan prose.
+- **Guard conditions are named per REQ** so [req-guards] can check them without
+  re-deriving intent from the plan prose.
 
 ## Install
 
@@ -49,7 +49,7 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                              | Fix                                                                       |
-| ------------------------------------ | ------------------------------------------------------------------------- |
+| :----------------------------------- | :------------------------------------------------------------------------ |
 | `plan_approve` refused               | The spec is not frozen, or the plan is not in `planning`. Both are named. |
 | It refuses to plan a task you expect | The task needs a contract change. Open a change-request PCR instead.      |
 | Plan order looks wrong               | It is topological on `dependencies`; check the YAML for a missing edge.   |
@@ -61,8 +61,8 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-develop`]: ../req-develop/
-[`req-workflow`]: ../req-workflow/
-[`req-guards`]: ../req-guards/
+[req-develop]: ../req-develop/
+[req-workflow]: ../req-workflow/
+[req-guards]: ../req-guards/
 [docs/installation.md]: ../../../docs/installation.md
 [LICENSE]: ../../../LICENSE

@@ -1,0 +1,10 @@
+// markdownlint-cli2 reads the rules from .markdownlint.json but does NOT read
+// .markdownlintignore - it spells the same exclusions as `ignores` here.
+// Keep the two lists in sync.
+{
+  "ignores": [
+    "skills/grill-me/SKILL.md",
+    "skills/grilling/SKILL.md",
+    "command/*.md"
+  ]
+}

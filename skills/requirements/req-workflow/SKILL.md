@@ -54,7 +54,7 @@ count in the Assumptions Ledger.
 ## 3. Classify the event (priority order)
 
 | User phrase →                                                        | Event     | Valid from                                              | Result                                     |
-| -------------------------------------------------------------------- | --------- | ------------------------------------------------------- | ------------------------------------------ |
+| :------------------------------------------------------------------- | :-------- | :------------------------------------------------------ | :----------------------------------------- |
 | new request / register this / formalize the vision + vision text     | new       | —                                                       | registered, then straight into elicitation |
 | let's continue / resume / back to it                                 | continue  | elicitation, br_review, technical                       | —                                          |
 | answers received / here are the answers / customer replied + content | answers   | elicitation                                             | ← br_review when frontier empties          |

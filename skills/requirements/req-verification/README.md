@@ -1,6 +1,6 @@
 # req-verification
 
-Phase 4 of [`req-develop`]: the verification-evidence gate (REQ-013) and the
+Phase 4 of [req-develop]: the verification-evidence gate (REQ-013) and the
 traceability chain (REQ-014). A REQ is not done because code exists — it is done
 because the evidence its contract asked for exists.
 
@@ -14,7 +14,7 @@ the concrete artifact that proves it against the `verification.evidence` and
 `verification.method` declared in the frozen YAML:
 
 | Method          | Evidence                                   |
-| --------------- | ------------------------------------------ |
+| :-------------- | :----------------------------------------- |
 | `test`          | A runnable check or test report            |
 | `inspection`    | Reviewed file paths plus a review sign-off |
 | `manual-review` | A review verdict or traceability matrix    |
@@ -46,8 +46,7 @@ has a `done` or explicitly `waived` row. It then flips
 - **Gaps are listed, never hidden.** Every break in the `BR → REQ → evidence`
   chain is reported explicitly, including at `complete`.
 - **A gap is not fixed by editing the contract.** Changing a REQ to match the
-  evidence is refused and routed to change control (REQ-015) via
-  [`req-workflow`].
+  evidence is refused and routed to change control (REQ-015) via [req-workflow].
 
 ## Install
 
@@ -62,7 +61,7 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                           | Fix                                                                            |
-| --------------------------------- | ------------------------------------------------------------------------------ |
+| :-------------------------------- | :----------------------------------------------------------------------------- |
 | A REQ stays `open`                | Its evidence does not match the declared method. Produce the right artifact.   |
 | `complete` refused                | The REQs lacking evidence are named.                                           |
 | You need to waive something       | Mark it `waived` with a reason; it is allowed, but it is recorded, not hidden. |
@@ -74,7 +73,7 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-develop`]: ../req-develop/
-[`req-workflow`]: ../req-workflow/
+[req-develop]: ../req-develop/
+[req-workflow]: ../req-workflow/
 [docs/installation.md]: ../../../docs/installation.md
 [LICENSE]: ../../../LICENSE

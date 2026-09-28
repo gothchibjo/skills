@@ -1,8 +1,7 @@
 # grill-me
 
-> Vendored from [`mattpocock/skills`] · © 2026 Matt Pocock
->
-> MIT licensed — see the [full notice] for provenance.
+> [SKILL.md] is vendored from [mattpocock/skills] — MIT, © 2026 Matt Pocock. See
+> [full notice].
 
 A relentless interview to sharpen a plan or design.
 
@@ -11,14 +10,14 @@ reach for it on its own.
 
 ## What it does
 
-`grill-me` is a two-line entry point. It calls the [`grilling`] skill, which is
+`grill-me` is a two-line entry point. It calls the [grilling] skill, which is
 the actual interview primitive: it maps the thing you are discussing as a design
 tree, then works that tree in rounds.
 
 Each round asks the whole **frontier** — every question whose prerequisites are
 already settled — numbered, with a recommended answer for each, then waits.
 
-```
+```markdown
 ❓ **Q1** - **<question title>**: <question body>
 
 ➡️ <your recommended answer>
@@ -57,21 +56,16 @@ npx skills add gothchibjo/skills --skill grill-me --skill grilling -g -a opencod
 
 See [docs/installation.md] for other methods.
 
-## Updating from upstream
-
-This file is vendored, not owned. The body is byte-identical to upstream at the
-commit recorded in the frontmatter. To update: re-fetch the upstream file,
-re-apply the frontmatter additions, and re-run the diff. Do not edit the body.
-Details in [THIRD_PARTY_NOTICES.md].
-
 ## License
 
-MIT, © 2026 Matt Pocock. See [THIRD_PARTY_NOTICES.md].
+MIT, © 2026 Matt Pocock, for the vendored [SKILL.md]. See
+[THIRD_PARTY_NOTICES.md].
 
 <!-- refs -->
 
-[`mattpocock/skills`]: https://github.com/mattpocock/skills
+[SKILL.md]: SKILL.md
+[mattpocock/skills]: https://github.com/mattpocock/skills
 [full notice]: ../../THIRD_PARTY_NOTICES.md
-[`grilling`]: ../grilling/
+[grilling]: ../grilling/
 [docs/installation.md]: ../../docs/installation.md
 [THIRD_PARTY_NOTICES.md]: ../../THIRD_PARTY_NOTICES.md

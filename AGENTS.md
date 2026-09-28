@@ -21,9 +21,24 @@ Prettier must not touch them. Never edit those bodies in place — re-fetch
 upstream, re-apply only the frontmatter additions, and re-run the diff. If you
 add a vendored skill, add its path to `.prettierignore` in the same commit.
 
+Every fenced code block needs a language (MD040). Use the real one where there
+is one — `bash`, `yaml`, `markdown` — and `text` for diagrams, directory trees
+and prose samples.
+
+markdownlint takes three files here, because the three tools disagree on config
+mechanics. `.markdownlint.json` holds the rules. `.markdownlintignore` skips the
+files that are not documents. `.markdownlint-cli2.jsonc` exists only to restate
+those skips for `markdownlint-cli2`, which does not read `.markdownlintignore`.
+Keep the two skip lists in sync.
+
+The exclusions are deliberate. The vendored skills keep their bodies
+byte-identical to upstream, which leaves unlabelled fences and long lines that
+only upstream can fix. The `command/` wrappers are agent prompts: their first
+line is the instruction, not a heading.
+
 ## Commits
 
-The [`commit`] skill generates messages in this project's Conventional Commits
+The [commit] skill generates messages in this project's Conventional Commits
 style, if you want it.
 
 ## Adding a skill
@@ -57,5 +72,5 @@ rest — are install targets, not places to author skills in.
 <!-- refs -->
 
 [THIRD_PARTY_NOTICES.md]: THIRD_PARTY_NOTICES.md
-[`commit`]: skills/commit/
+[commit]: skills/commit/
 [README.md]: README.md

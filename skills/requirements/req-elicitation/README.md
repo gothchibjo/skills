@@ -1,6 +1,6 @@
 # req-elicitation
 
-Phase 2 of [`req-workflow`]: interview the customer until the frontier is empty,
+Phase 2 of [req-workflow]: interview the customer until the frontier is empty,
 then author the business requirements document.
 
 **Not directly invocable.** The frontmatter sets
@@ -8,13 +8,12 @@ then author the business requirements document.
 
 ## What it does
 
-It runs the [`grilling`] method against the vision: a design-tree interview
-where every decision branches into the decisions hanging off it. The
-**frontier** is the set of questions whose prerequisites are settled. The whole
-frontier is asked in one round — numbered, each with a recommended answer — then
-it waits.
+It runs the [grilling] method against the vision: a design-tree interview where
+every decision branches into the decisions hanging off it. The **frontier** is
+the set of questions whose prerequisites are settled. The whole frontier is
+asked in one round — numbered, each with a recommended answer — then it waits.
 
-```
+```markdown
 ### CL-7 (awaiting) — 2026-03-14
 
 > Q1 — **Retention**: how long do audit records live? ➡️ 3 years
@@ -55,7 +54,7 @@ atomic BRs sorted `must` → `should` → `could`, each traced to `[V §x]` and
 ## Install
 
 Not installed on its own; it ships with the requirements pipeline. It calls
-[`grilling`], which ships with the same install.
+[grilling], which ships with the same install.
 
 ```bash
 npx skills add gothchibjo/skills -g -a opencode
@@ -66,7 +65,7 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                               | Fix                                                                             |
-| ------------------------------------- | ------------------------------------------------------------------------------- |
+| :------------------------------------ | :------------------------------------------------------------------------------ |
 | It asks a question you can look up    | Say so — the skill is told facts are its job, and it will dispatch a sub-agent. |
 | It stopped with `(awaiting)` entries  | Send the answers; the next round resumes from there.                            |
 | BR is marked `proposed`, not approved | Expected. Approval is your explicit action, never inferred.                     |
@@ -78,7 +77,7 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-workflow`]: ../req-workflow/
-[`grilling`]: ../../grilling/
+[req-workflow]: ../req-workflow/
+[grilling]: ../../grilling/
 [docs/installation.md]: ../../../docs/installation.md
 [LICENSE]: ../../../LICENSE

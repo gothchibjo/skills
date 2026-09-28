@@ -9,7 +9,7 @@ The skill reads `git diff --staged`, works out what actually changed and why,
 and produces a message with a summary line, a bullet list of key changes and a
 short purpose paragraph — then commits it.
 
-```
+```text
 type(scope): imperative summary
 <blank line>
 - bullet describing key change
@@ -41,7 +41,7 @@ Installed as a skill it can be invoked directly by name, or through the
 `/commit` command in [opencode]:
 
 | Invocation     | Behaviour                          |
-| -------------- | ---------------------------------- |
+| :------------- | :--------------------------------- |
 | `/commit`      | generate the message and commit    |
 | `/commit push` | generate the message, commit, push |
 
@@ -77,7 +77,7 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                                      | Fix                                                                                                                                         |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| :------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
 | `/commit` is not found                       | The `command/` wrappers are not installed by the `skills` CLI. Copy `command/commit.md` to `~/.config/opencode/command/commit.md` yourself. |
 | Scope does not match what you want           | Say the scope explicitly when asking, or rename the top-level directory.                                                                    |
 | The message is too generic                   | The diff was ambiguous, so was the message. State the intent in the request.                                                                |

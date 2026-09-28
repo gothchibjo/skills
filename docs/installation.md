@@ -25,7 +25,7 @@ to it, so a single edit propagates everywhere. Use `--copy` if your setup does
 not support symlinks.
 
 | Option       | Effect                                                          |
-| ------------ | --------------------------------------------------------------- |
+| :----------- | :-------------------------------------------------------------- |
 | `-g`         | install to the user directory instead of the project            |
 | `-a <agent>` | target a specific agent (`opencode`, `claude-code`, `codex`, …) |
 | `-s <name>`  | install specific skills by name, `'*'` for all                  |
@@ -36,7 +36,7 @@ not support symlinks.
 Installation paths per agent:
 
 | Agent       | Global path                  | Project path      |
-| ----------- | ---------------------------- | ----------------- |
+| :---------- | :--------------------------- | :---------------- |
 | OpenCode    | `~/.config/opencode/skills/` | `.agents/skills/` |
 | Claude Code | `~/.claude/skills/`          | `.claude/skills/` |
 | Codex       | `~/.codex/skills/`           | `.agents/skills/` |
@@ -79,8 +79,7 @@ Restart the agent session afterwards so it re-scans the skills directory.
 ## Commands are not installed by the CLI
 
 The `skills` CLI installs skills only. The OpenCode command wrappers in
-[`command/`] — `/commit`, `/requirements`, `/develop` — have to be copied by
-hand:
+[command/] — `/commit`, `/requirements`, `/develop` — have to be copied by hand:
 
 ```bash
 REPO=https://raw.githubusercontent.com/gothchibjo/skills/main
@@ -114,5 +113,5 @@ its gates.
 <!-- refs -->
 
 [Agent Skills spec]: https://agentskills.io
-[`command/`]: ../command/
+[command/]: ../command/
 [README]: ../README.md

@@ -12,17 +12,17 @@ Runs only where a contract is already frozen
 (`requirements/PCR-NNNN-<slug>/03-technical.yaml` with `status: frozen`). The
 development state lives in `04-plan.md`, not in the agent's memory.
 
-```
+```text
 planning → plan_approved → implementing → verifying → done
 ```
 
-`blocked` is a transient state: set by [`req-guards`] on a guard violation, left
+`blocked` is a transient state: set by [req-guards] on a guard violation, left
 via `resume`.
 
 ## Events
 
 | Say                      | Event          | Valid from                 | Effect                                 |
-| ------------------------ | -------------- | -------------------------- | -------------------------------------- |
+| :----------------------- | :------------- | :------------------------- | :------------------------------------- |
 | plan it, make a plan     | `plan`         | record must be frozen      | `04-plan.md` written from the contract |
 | plan approved            | `plan_approve` | `planning`                 | plan-approval gate passes              |
 | implement, continue      | `implement`    | `plan_approved`, `blocked` | guards pre-checked, then code          |
@@ -37,7 +37,7 @@ via `resume`.
   cannot be edited during development. The `pipeline_gates` flags inside the
   YAML are bookkeeping and may flip; nothing else in it changes.
 - **A scope deviation is a new PCR, not an edit.** Anything that looks like
-  changing a frozen REQ is refused and routed to [`req-workflow`] as change
+  changing a frozen REQ is refused and routed to [req-workflow] as change
   control.
 - **Four gates, in order.** `requirement_freeze` → `plan_approval` →
   `guard_conditions` → `verification_evidence`. Each is flipped by the phase
@@ -50,8 +50,8 @@ via `resume`.
 ## Scope
 
 This drives development against a frozen contract. It is not for shaping
-requirements — that is [`req-workflow`]. It refuses to start when no frozen
-record exists.
+requirements — that is [req-workflow]. It refuses to start when no frozen record
+exists.
 
 ## Install
 
@@ -65,12 +65,12 @@ npx skills add gothchibjo/skills --skill req-develop --skill req-plan \
 ```
 
 The `/develop` command wrapper is not installed by the CLI — copy
-[`command/develop.md`] by hand. See [docs/installation.md] for the full matrix.
+[command/develop.md] by hand. See [docs/installation.md] for the full matrix.
 
 ## Troubleshooting
 
 | Symptom                             | Fix                                                                                    |
-| ----------------------------------- | -------------------------------------------------------------------------------------- |
+| :---------------------------------- | :------------------------------------------------------------------------------------- |
 | "Development needs a frozen record" | No `03-technical.yaml` is `frozen`. Finish the requirements phase first.               |
 | `implement` refused on a plan       | The plan is not approved yet. `plan_approve` needs a human — it will not self-approve. |
 | Stuck in `blocked`                  | Read the Guard Log in `04-plan.md`; the failing guard names its own check.             |
@@ -82,8 +82,8 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-guards`]: ../req-guards/
-[`req-workflow`]: ../req-workflow/
-[`command/develop.md`]: ../../../command/develop.md
+[req-guards]: ../req-guards/
+[req-workflow]: ../req-workflow/
+[command/develop.md]: ../../../command/develop.md
 [docs/installation.md]: ../../../docs/installation.md
 [LICENSE]: ../../../LICENSE

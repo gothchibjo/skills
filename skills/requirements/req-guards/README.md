@@ -1,6 +1,6 @@
 # req-guards
 
-Phase 3 of [`req-develop`]: the guard-conditions gate (REQ-012). Nothing gets
+Phase 3 of [req-develop]: the guard-conditions gate (REQ-012). Nothing gets
 implemented until the REQ's preconditions actually hold.
 
 **Not directly invocable.** The frontmatter sets
@@ -15,10 +15,10 @@ what the plan claims, but against what is on disk.
 Every check is appended to the Guard Log in `04-plan.md`:
 
 ```markdown
-| date       | REQ     | guard                | check                      | result |
-| ---------- | ------- | -------------------- | -------------------------- | ------ |
+| date       | REQ     | guard                | check                       | result |
+| ---------- | ------- | -------------------- | --------------------------- | ------ |
 | 2026-03-14 | REQ-004 | migration applied    | `migrations/004.sql` exists | pass   |
-| 2026-03-14 | REQ-004 | contract frozen      | `03-technical.yaml` frozen | pass   |
+| 2026-03-14 | REQ-004 | contract frozen      | `03-technical.yaml` frozen  | pass   |
 ```
 
 None failing → the step is announced clean and `implementing` begins. Any
@@ -40,7 +40,7 @@ to `implementing`.
   satisfied is information about the repo, and the refusal names it.
 - **Skipping a guard is a scope change.** Any need to alter a frozen REQ text or
   bypass a guard "to get going" is refused: no YAML edit, no plan edit, routed
-  to [`req-workflow`] to register a change-request PCR (REQ-015).
+  to [req-workflow] to register a change-request PCR (REQ-015).
 
 ## Install
 
@@ -55,9 +55,9 @@ See [docs/installation.md] for the full matrix.
 ## Troubleshooting
 
 | Symptom                           | Fix                                                                     |
-| --------------------------------- | ----------------------------------------------------------------------- |
+| :-------------------------------- | :---------------------------------------------------------------------- |
 | Stuck `blocked` after a fix       | Run `resume` — guards are re-checked, not remembered.                   |
-| Refused before checking any guard | The plan is not `plan_approved`. Approve it via [`req-plan`] first.     |
+| Refused before checking any guard | The plan is not `plan_approved`. Approve it via [req-plan] first.       |
 | A guard you believe is satisfied  | The check failed. Read the row: it records what was actually looked at. |
 | It refuses to skip a guard        | By design — that is change control, not an obstacle. Open a PCR.        |
 
@@ -67,8 +67,8 @@ MIT. See [LICENSE].
 
 <!-- refs -->
 
-[`req-develop`]: ../req-develop/
-[`req-workflow`]: ../req-workflow/
+[req-develop]: ../req-develop/
+[req-workflow]: ../req-workflow/
 [docs/installation.md]: ../../../docs/installation.md
-[`req-plan`]: ../req-plan/
+[req-plan]: ../req-plan/
 [LICENSE]: ../../../LICENSE
