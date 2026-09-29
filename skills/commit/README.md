@@ -31,9 +31,10 @@ Message rules:
 
 ## When to use
 
-Model-invoked. Triggers on "commit this", "write a commit message", "generate a
-commit message for these changes", and on being asked to review or fix an
-existing message against the project's conventions.
+Model-invokable and user-invocable. The agent triggers it on "commit this",
+"write a commit message", "generate a commit message for these changes", and on
+being asked to review or fix an existing message against the project's
+conventions.
 
 ## Usage
 

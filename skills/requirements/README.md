@@ -93,8 +93,8 @@ Phase 2 — /develop
 `feedback` is the only back-edge: it sends `br_approved` or `technical` back to
 `br_review` and reopens the BR, as long as the BR is still `proposed`.
 
-The six `phase` skills carry `disable-model-invocation: true`. The agent will
-never reach for them on its own; only the entry point loads them.
+The phase skills carry `disable-model-invocation: true`. The agent will never
+reach for them on its own; only the entry point loads them.
 
 | Phase skill          | Dispatched by  | On event                     |
 | :------------------- | :------------- | :--------------------------- |
@@ -161,8 +161,8 @@ by hand. See [docs/installation.md] for the full matrix.
 
 ## Conventions
 
-- **`disable-model-invocation: true`** on the six phase skills. This is what
-  keeps the entry points the only way in.
+- **`disable-model-invocation: true`** on the phase skills. This is what keeps
+  the entry points the only way in.
 - **`metadata: protected: "true"`** on every skill in the family. It marks them
   as off-limits to maintenance tooling: no archiving, no rewriting, no pruning
   them out of an install.

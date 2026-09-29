@@ -42,37 +42,28 @@ the [Agent Skills spec] can run them.
 
 ## Catalogue
 
-How the skill gets invoked:
-
-| Value   | Meaning                                                               |
-| :------ | :-------------------------------------------------------------------- |
-| `user`  | Only you can trigger it.                                              |
-| `model` | The agent may pick it up on its own when the task fits.               |
-| `both`  | Either.                                                               |
-| `phase` | Never invoked directly — loaded only by the skill that dispatches it. |
-
 ### Available
 
-| Skill                | Invocation | What it does                                                                                                                                                 |
-| :------------------- | :--------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [commit]             | model      | Conventional Commits message from the staged diff, matching the project's own commit style, then commits.                                                    |
-| [grill-me]           | user       | Relentless interview to sharpen a plan or design. Vendored from mattpocock/skills.                                                                           |
-| [grilling]           | model      | The reusable interview primitive behind `grill-me`. Vendored from mattpocock/skills.                                                                         |
-| [req-workflow]       | both       | Phase 1 entry point. Registers a customer vision as a PCR, elicits clarifications, approves business requirements, generates and freezes the technical spec. |
-| [req-register]       | phase      | Creates the PCR record: vision verbatim as PART A, empty clarification log, skeletons.                                                                       |
-| [req-elicitation]    | phase      | Runs the clarification interview, appends every round to PART B, writes the business requirements once the frontier is empty.                                |
-| [req-technical-spec] | phase      | Deterministic BR to REQ mapping, coverage report, YAML validation, the requirement-freeze gate.                                                              |
-| [req-develop]        | both       | Phase 2 entry point. Plans from a frozen contract, requires plan approval, guards every step, gates completion on evidence.                                  |
-| [req-plan]           | phase      | Per-REQ task breakdown, topological order, the evidence each REQ must produce, the plan-approval gate.                                                       |
-| [req-guards]         | phase      | Checks `guard_conditions` before each implementation step and blocks on violations.                                                                          |
-| [req-verification]   | phase      | Closes each REQ only with matching evidence; builds the BR to REQ to evidence chain.                                                                         |
+| Skill                | Model          | Command         | What it does                                                                                                                                                 |
+| :------------------- | :------------- | :-------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [commit]             | may pick it up | `/commit`       | Conventional Commits message from the staged diff, matching the project's own commit style, then commits.                                                    |
+| [grill-me]           | never          |                 | Relentless interview to sharpen a plan or design. Vendored from mattpocock/skills.                                                                           |
+| [grilling]           | may pick it up |                 | The reusable interview primitive behind `grill-me`. Vendored from mattpocock/skills.                                                                         |
+| [req-workflow]       | may pick it up | `/requirements` | Phase 1 entry point. Registers a customer vision as a PCR, elicits clarifications, approves business requirements, generates and freezes the technical spec. |
+| [req-register]       | never          |                 | Creates the PCR record: vision verbatim as PART A, empty clarification log, skeletons.                                                                       |
+| [req-elicitation]    | never          |                 | Runs the clarification interview, appends every round to PART B, writes the business requirements once the frontier is empty.                                |
+| [req-technical-spec] | never          |                 | Deterministic BR to REQ mapping, coverage report, YAML validation, the requirement-freeze gate.                                                              |
+| [req-develop]        | may pick it up | `/develop`      | Phase 2 entry point. Plans from a frozen contract, requires plan approval, guards every step, gates completion on evidence.                                  |
+| [req-plan]           | never          |                 | Per-REQ task breakdown, topological order, the evidence each REQ must produce, the plan-approval gate.                                                       |
+| [req-guards]         | never          |                 | Checks `guard_conditions` before each implementation step and blocks on violations.                                                                          |
+| [req-verification]   | never          |                 | Closes each REQ only with matching evidence; builds the BR to REQ to evidence chain.                                                                         |
 
 ## The requirements pipeline
 
-Eight of these skills are one process in two phases: `req-workflow` takes an
+Some of these skills are one process in two phases: `req-workflow` takes an
 incoming vision to a frozen contract, `req-develop` takes that contract to
-verified code. They only make sense installed together, and the six `phase`
-skills are never invoked on their own — the entry point dispatches them.
+verified code. They only make sense installed together, and the phase skills are
+never invoked on their own — the entry point dispatches them.
 
 States live in the record files, never in the agent's memory, so any session
 resumes a PCR by reading the folder. Four gates hold the process together:

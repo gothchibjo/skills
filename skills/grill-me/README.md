@@ -5,9 +5,6 @@
 
 A relentless interview to sharpen a plan or design.
 
-**User-invoked only.** Trigger it yourself with `/grill-me`; the agent will not
-reach for it on its own.
-
 ## What it does
 
 `grill-me` is a two-line entry point. It calls the [grilling] skill, which is
