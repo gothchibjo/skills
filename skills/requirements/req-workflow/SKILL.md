@@ -15,6 +15,7 @@ description:
   requirements only."
 metadata:
   protected: "true"
+  copyright: "© 2026 github.com/gothchibjo"
 ---
 
 # Requirements state machine: vision → approved BR → frozen technical spec

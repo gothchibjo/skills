@@ -3,7 +3,7 @@ name: commit
 description: "Generate a Conventional Commits-style commit message (type(scope): summary, body with bullets, purpose paragraph) from the currently staged git changes, matching the project's commit style. Use when the user asks to write/generate/draft a commit message, asks what to write for a commit, says \"commit this\"/\"commit these changes\", or wants help committing staged work. Also use if the user asks to review or fix an existing commit message against the project's conventions. Behaviour: commit only what is already staged and never add extra files; only if nothing is staged at all, auto-stage everything with `git add -A` before proceeding. Arguments: no args — prepare and commit; push — prepare, commit, and push."
 metadata:
   protected: "false"
-  copyright: "© 2026 gothchibjo"
+  copyright: "© 2026 github.com/gothchibjo"
 ---
 
 # Generate Commit Message

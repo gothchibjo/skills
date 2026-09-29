@@ -11,6 +11,7 @@ description:
 disable-model-invocation: true
 metadata:
   protected: "true"
+  copyright: "© 2026 github.com/gothchibjo"
 ---
 
 # Phase: req-elicitation

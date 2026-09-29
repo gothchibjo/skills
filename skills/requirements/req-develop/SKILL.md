@@ -14,6 +14,7 @@ description:
   shaping; this drives development."
 metadata:
   protected: "true"
+  copyright: "© 2026 github.com/gothchibjo"
 ---
 
 # Development state machine: frozen spec → plan → guarded code → evidence
