@@ -49,6 +49,7 @@ the [Agent Skills spec] can run them.
 | [commit]             | may pick it up | `/commit`       | Conventional Commits message from the staged diff, matching the project's own commit style, then commits.                                                    |
 | [grill-me]           | never          |                 | Relentless interview to sharpen a plan or design. Vendored from mattpocock/skills.                                                                           |
 | [grilling]           | may pick it up |                 | The reusable interview primitive behind `grill-me`. Vendored from mattpocock/skills.                                                                         |
+| [pattern-observer]   | may pick it up | `/observer`     | Reads the git history for repeated work and proposes the skill that should capture it; also flags skills that grew by accretion.                             |
 | [req-workflow]       | may pick it up | `/requirements` | Phase 1 entry point. Registers a customer vision as a PCR, elicits clarifications, approves business requirements, generates and freezes the technical spec. |
 | [req-register]       | never          |                 | Creates the PCR record: vision verbatim as PART A, empty clarification log, skeletons.                                                                       |
 | [req-elicitation]    | never          |                 | Runs the clarification interview, appends every round to PART B, writes the business requirements once the frontier is empty.                                |
@@ -57,6 +58,7 @@ the [Agent Skills spec] can run them.
 | [req-plan]           | never          |                 | Per-REQ task breakdown, topological order, the evidence each REQ must produce, the plan-approval gate.                                                       |
 | [req-guards]         | never          |                 | Checks `guard_conditions` before each implementation step and blocks on violations.                                                                          |
 | [req-verification]   | never          |                 | Closes each REQ only with matching evidence; builds the BR to REQ to evidence chain.                                                                         |
+| [skill-gardener]     | may pick it up | `/gardener`     | Ages skills in and out: archives the unused, restores what was archived by mistake, deletes what has rotted.                                                 |
 
 ## The requirements pipeline
 
@@ -73,17 +75,33 @@ resumes a PCR by reading the folder. Four gates hold the process together:
 **[skills/requirements/README.md]** — the state diagram, the record layout,
 which skill dispatches which, and the gates.
 
+## Keeping the catalogue honest
+
+`pattern-observer` and `skill-gardener` are a pair, and both work off the same
+`.skill-usage.json` file the skills write on completion. The observer proposes
+the skill a repeated piece of work should become, and flags skills that have
+accumulated patches until they need a refactor. The gardener reads the same
+usage data and ages skills out — archive after three months unused, restore
+after a month, delete after six.
+
+Both ask before touching anything, and both leave skills with
+`metadata.protected: "true"` alone. Set that flag on a skill that is part of the
+tooling rather than your work: an entry point, a skill that a command depends
+on, anything whose absence would break the others.
+
 ## Commands
 
 OpenCode command wrappers live in [command/]. The `skills` CLI does not install
 these — they are a few lines each and trivially copied by hand.
 `docs/installation.md` has the one-liner.
 
-| Command         | Skill          | Purpose                               |
-| :-------------- | :------------- | :------------------------------------ |
-| `/commit`       | `commit`       | Generate a commit message and commit. |
-| `/requirements` | `req-workflow` | Drive the requirements state machine. |
-| `/develop`      | `req-develop`  | Drive the development state machine.  |
+| Command         | Skill              | Purpose                               |
+| :-------------- | :----------------- | :------------------------------------ |
+| `/commit`       | `commit`           | Generate a commit message and commit. |
+| `/requirements` | `req-workflow`     | Drive the requirements state machine. |
+| `/develop`      | `req-develop`      | Drive the development state machine.  |
+| `/observer`     | `pattern-observer` | Find repeated work worth a skill.     |
+| `/gardener`     | `skill-gardener`   | Archive and restore skills by usage.  |
 
 ## License
 
@@ -99,6 +117,7 @@ MIT. See [LICENSE]. Vendored third-party skills keep their own copyrights in
 [commit]: skills/commit/
 [grill-me]: skills/grill-me/
 [grilling]: skills/grilling/
+[pattern-observer]: skills/pattern-observer/
 [req-workflow]: skills/requirements/req-workflow/
 [req-register]: skills/requirements/req-register/
 [req-elicitation]: skills/requirements/req-elicitation/
@@ -107,6 +126,7 @@ MIT. See [LICENSE]. Vendored third-party skills keep their own copyrights in
 [req-plan]: skills/requirements/req-plan/
 [req-guards]: skills/requirements/req-guards/
 [req-verification]: skills/requirements/req-verification/
+[skill-gardener]: skills/skill-gardener/
 [skills/requirements/README.md]: skills/requirements/README.md
 [command/]: command/
 [LICENSE]: LICENSE

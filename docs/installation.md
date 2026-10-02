@@ -79,12 +79,13 @@ Restart the agent session afterwards so it re-scans the skills directory.
 ## Commands are not installed by the CLI
 
 The `skills` CLI installs skills only. The OpenCode command wrappers in
-[command/] — `/commit`, `/requirements`, `/develop` — have to be copied by hand:
+[command/] — `/commit`, `/requirements`, `/develop`, `/observer`, `/gardener` —
+have to be copied by hand:
 
 ```bash
 REPO=https://raw.githubusercontent.com/gothchibjo/skills/main
 mkdir -p ~/.config/opencode/command
-for c in commit requirements develop; do
+for c in commit requirements develop observer gardener; do
   curl -fsSL "$REPO/command/$c.md" -o ~/.config/opencode/command/$c.md
 done
 ```
