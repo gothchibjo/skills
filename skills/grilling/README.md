@@ -53,11 +53,12 @@ to event sourcing" are both better after a grilling round than before.
 
 ## Install
 
+See the [installation guide] for alternative installation methods. To install
+just this skill:
+
 ```bash
 npx skills add gothchibjo/skills --skill grilling -g -a opencode
 ```
-
-See [docs/installation.md] for other methods.
 
 ## License
 
@@ -70,5 +71,5 @@ MIT, © 2026 Matt Pocock, for the vendored [SKILL.md]. See
 [mattpocock/skills]: https://github.com/mattpocock/skills
 [full notice]: ../../THIRD_PARTY_NOTICES.md
 [grill-me]: ../grill-me/
-[docs/installation.md]: ../../docs/installation.md
+[installation guide]: ../../docs/installation.md
 [THIRD_PARTY_NOTICES.md]: ../../THIRD_PARTY_NOTICES.md

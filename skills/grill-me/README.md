@@ -46,12 +46,12 @@ of your plan you have not considered yet.
 
 ## Install
 
+See the [installation guide] for alternative installation methods. To install
+just this skill and its dependencies:
+
 ```bash
-# grill-me alone is useless without grilling, so install both
 npx skills add gothchibjo/skills --skill grill-me --skill grilling -g -a opencode
 ```
-
-See [docs/installation.md] for other methods.
 
 ## License
 
@@ -64,5 +64,5 @@ MIT, © 2026 Matt Pocock, for the vendored [SKILL.md]. See
 [mattpocock/skills]: https://github.com/mattpocock/skills
 [full notice]: ../../THIRD_PARTY_NOTICES.md
 [grilling]: ../grilling/
-[docs/installation.md]: ../../docs/installation.md
+[installation guide]: ../../docs/installation.md
 [THIRD_PARTY_NOTICES.md]: ../../THIRD_PARTY_NOTICES.md

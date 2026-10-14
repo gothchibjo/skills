@@ -157,7 +157,7 @@ npx skills add gothchibjo/skills -g -a opencode \
 
 The `/requirements` and `/develop` command wrappers are not installed by the CLI
 — copy [requirements.md] and [develop.md] into your agent's `command/` directory
-by hand. See [docs/installation.md] for the full matrix.
+by hand. See [docs/installation.md] for alternative installation methods.
 
 ## Conventions
 

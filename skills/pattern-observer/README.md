@@ -59,17 +59,12 @@ Invoked by name as a skill, or through the `/observer` command in [command]:
 
 ## Install
 
+See the [installation guide] for alternative installation methods. To install
+just this skill:
+
 ```bash
-# with the skills CLI
 npx skills add gothchibjo/skills --skill pattern-observer -a opencode
-
-# or manually
-mkdir -p ~/.config/opencode/skills/pattern-observer
-curl -fsSL https://raw.githubusercontent.com/gothchibjo/skills/main/skills/pattern-observer/SKILL.md \
-  -o ~/.config/opencode/skills/pattern-observer/SKILL.md
 ```
-
-See [docs/installation.md] for the full matrix.
 
 ## Troubleshooting
 
@@ -93,5 +88,5 @@ MIT. See [LICENSE].
 
 [command]: ../../command/observer.md
 [skill-gardener]: ../skill-gardener/
-[docs/installation.md]: ../../docs/installation.md
+[installation guide]: ../../docs/installation.md
 [LICENSE]: ../../LICENSE

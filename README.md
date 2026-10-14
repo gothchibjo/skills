@@ -22,20 +22,19 @@ ideas.
 
 ## Install
 
+There are three alternative ways to install skills: ask your agent in the
+harness, use the `skills` CLI, or install manually. See the [installation guide]
+for all details.
+
+Quick example with the CLI:
+
 ```bash
 # everything, globally, for OpenCode
 npx skills add gothchibjo/skills -g -a opencode
 
 # just one skill
 npx skills add gothchibjo/skills --skill commit -g -a opencode
-
-# what is in the box
-npx skills add gothchibjo/skills --list
 ```
-
-The `skills` CLI copies or symlinks the skill files into the agent's skills
-directory. Full matrix, manual installation and the OpenCode symlink setup:
-**[docs/installation.md]**.
 
 Skills are plain `SKILL.md` files with YAML frontmatter, so anything that speaks
 the [Agent Skills spec] can run them.
@@ -112,7 +111,7 @@ MIT. See [LICENSE]. Vendored third-party skills keep their own copyrights in
 
 [mattpocock/skills]: https://github.com/mattpocock/skills
 [THIRD_PARTY_NOTICES.md]: THIRD_PARTY_NOTICES.md
-[docs/installation.md]: docs/installation.md
+[installation guide]: docs/installation.md
 [Agent Skills spec]: https://agentskills.io
 [commit]: skills/commit/
 [grill-me]: skills/grill-me/

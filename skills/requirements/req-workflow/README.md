@@ -77,8 +77,8 @@ npx skills add gothchibjo/skills --skill req-workflow --skill req-register \
 ```
 
 The `/requirements` command wrapper is not installed by the CLI — copy
-[command/requirements.md] by hand. See [docs/installation.md] for the full
-matrix.
+[command/requirements.md] by hand. See [docs/installation.md] for alternative
+installation methods.
 
 ## Troubleshooting
 

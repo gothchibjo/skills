@@ -59,7 +59,7 @@ Not installed on its own; it ships with the requirements pipeline.
 npx skills add gothchibjo/skills -g -a opencode
 ```
 
-See [docs/installation.md] for the full matrix.
+See [docs/installation.md] for alternative installation methods.
 
 ## Troubleshooting
 

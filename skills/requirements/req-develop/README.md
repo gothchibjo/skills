@@ -65,7 +65,8 @@ npx skills add gothchibjo/skills --skill req-develop --skill req-plan \
 ```
 
 The `/develop` command wrapper is not installed by the CLI — copy
-[command/develop.md] by hand. See [docs/installation.md] for the full matrix.
+[command/develop.md] by hand. See [docs/installation.md] for alternative
+installation methods.
 
 ## Troubleshooting
 

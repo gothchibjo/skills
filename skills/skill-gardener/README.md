@@ -52,17 +52,12 @@ Invoked by name as a skill, or through the `/gardener` command in [command]:
 
 ## Install
 
+See the [installation guide] for alternative installation methods. To install
+just this skill:
+
 ```bash
-# with the skills CLI
 npx skills add gothchibjo/skills --skill skill-gardener -a opencode
-
-# or manually
-mkdir -p ~/.config/opencode/skills/skill-gardener
-curl -fsSL https://raw.githubusercontent.com/gothchibjo/skills/main/skills/skill-gardener/SKILL.md \
-  -o ~/.config/opencode/skills/skill-gardener/SKILL.md
 ```
-
-See [docs/installation.md] for the full matrix.
 
 ## Troubleshooting
 
@@ -86,5 +81,5 @@ MIT. See [LICENSE].
 
 [command]: ../../command/gardener.md
 [pattern-observer]: ../pattern-observer/
-[docs/installation.md]: ../../docs/installation.md
+[installation guide]: ../../docs/installation.md
 [LICENSE]: ../../LICENSE

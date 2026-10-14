@@ -63,17 +63,12 @@ Installed as a skill it can be invoked directly by name, or through the
 
 ## Install
 
+See the [installation guide] for alternative installation methods. To install
+just this skill:
+
 ```bash
-# with the skills CLI
 npx skills add gothchibjo/skills --skill commit -a opencode
-
-# or manually
-mkdir -p ~/.config/opencode/skills/commit
-curl -fsSL https://raw.githubusercontent.com/gothchibjo/skills/main/skills/commit/SKILL.md \
-  -o ~/.config/opencode/skills/commit/SKILL.md
 ```
-
-See [docs/installation.md] for the full matrix.
 
 ## Troubleshooting
 
@@ -91,5 +86,5 @@ MIT. See [LICENSE].
 <!-- refs -->
 
 [opencode]: ../../command/commit.md
-[docs/installation.md]: ../../docs/installation.md
+[installation guide]: ../../docs/installation.md
 [LICENSE]: ../../LICENSE

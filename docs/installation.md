@@ -2,9 +2,21 @@
 
 Every skill is a plain `SKILL.md` file with YAML frontmatter (`name`,
 `description`), so anything implementing the [Agent Skills spec] can run them.
-Three setup paths, from least to most control.
 
-## 1. The `skills` CLI (recommended)
+There are three alternative ways to install skills:
+
+## Option 1: Ask your agent in the harness (easiest)
+
+Give your agent the repository URL and ask it to install the skills you need on
+its own. For example:
+
+```text
+Install skills from https://github.com/gothchibjo/skills for opencode. I need commit and all requirements workflow skills
+```
+
+The exact phrasing depends on your harness.
+
+## Option 2: Use the `skills` CLI
 
 ```bash
 # install everything globally for OpenCode
@@ -41,9 +53,13 @@ Installation paths per agent:
 | Claude Code | `~/.claude/skills/`          | `.claude/skills/` |
 | Codex       | `~/.codex/skills/`           | `.agents/skills/` |
 
-## 2. Manual copy
+## Option 3: Install manually
 
-No tooling, full control. Download the skill directory you want:
+No tooling, full control.
+
+### Copy the files
+
+Download the skill directory you want:
 
 ```bash
 REPO=https://raw.githubusercontent.com/gothchibjo/skills/main
@@ -64,7 +80,7 @@ cp -r skills/commit ~/.config/opencode/skills/
 The `README.md` next to each `SKILL.md` is documentation for humans and is
 optional — agents only read `SKILL.md`.
 
-## 3. Symlink from a checkout (development)
+### Symlink from a checkout (development)
 
 If you are working on the skills themselves, symlink them into your agent
 directory so edits take effect immediately, with no reinstall:

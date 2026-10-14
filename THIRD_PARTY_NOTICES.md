@@ -5,7 +5,7 @@ files, unmodified, alongside this repository's own [MIT License].
 
 ## mattpocock/skills
 
-- **Source:** <https://github.com/mattpocock/skills>
+- **Source:** [mattpocock/skills]
 - **Copyright:** © 2026 Matt Pocock
 - **License:** MIT
 
@@ -60,4 +60,5 @@ tool is covered by its own license and is not part of this repository.
 [MIT License]: LICENSE
 [skills/grilling/SKILL.md]: skills/grilling/SKILL.md
 [skills/grill-me/SKILL.md]: skills/grill-me/SKILL.md
+[mattpocock/skills]: https://github.com/mattpocock/skills
 [vercel-labs/skills]: https://github.com/vercel-labs/skills
