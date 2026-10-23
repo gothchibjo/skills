@@ -48,6 +48,7 @@ the [Agent Skills spec] can run them.
 | [commit]             | may pick it up | `/commit`       | Conventional Commits message from the staged diff, matching the project's own commit style, then commits.                                                    |
 | [grill-me]           | never          |                 | Relentless interview to sharpen a plan or design. Vendored from mattpocock/skills.                                                                           |
 | [grilling]           | may pick it up |                 | The reusable interview primitive behind `grill-me`. Vendored from mattpocock/skills.                                                                         |
+| [merge-request]      | never          | `/mr`           | Opens a merge/pull request from the current branch to the default or given branch, with a commit-style title and description.                                |
 | [pattern-observer]   | may pick it up | `/observer`     | Reads the git history for repeated work and proposes the skill that should capture it; also flags skills that grew by accretion.                             |
 | [req-workflow]       | may pick it up | `/requirements` | Phase 1 entry point. Registers a customer vision as a PCR, elicits clarifications, approves business requirements, generates and freezes the technical spec. |
 | [req-register]       | never          |                 | Creates the PCR record: vision verbatim as PART A, empty clarification log, skeletons.                                                                       |
@@ -97,6 +98,7 @@ these — they are a few lines each and trivially copied by hand.
 | Command         | Skill              | Purpose                               |
 | :-------------- | :----------------- | :------------------------------------ |
 | `/commit`       | `commit`           | Generate a commit message and commit. |
+| `/mr`           | `merge-request`    | Open a merge request for the branch.  |
 | `/requirements` | `req-workflow`     | Drive the requirements state machine. |
 | `/develop`      | `req-develop`      | Drive the development state machine.  |
 | `/observer`     | `pattern-observer` | Find repeated work worth a skill.     |
@@ -116,6 +118,7 @@ MIT. See [LICENSE]. Vendored third-party skills keep their own copyrights in
 [commit]: skills/commit/
 [grill-me]: skills/grill-me/
 [grilling]: skills/grilling/
+[merge-request]: skills/merge-request/
 [pattern-observer]: skills/pattern-observer/
 [req-workflow]: skills/requirements/req-workflow/
 [req-register]: skills/requirements/req-register/
