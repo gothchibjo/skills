@@ -19,6 +19,10 @@ loaded only through the state machine.
 - Writes the record skeleton: PART A verbatim, an empty PART B, and skeletons of
   `02-business.md` and `03-technical.yaml` with the four gates at
   `passed: false`.
+- Resolves the glossary paths once per project and records them in the registry
+  header: `glossary:` for the writable canon (default
+  `requirements/glossary.md`) and `glossary_ref:` for an existing glossary
+  elsewhere, which stays read-only.
 - Adds the row to the registry in `requirements/README.md`.
 
 ## The split check
@@ -43,6 +47,10 @@ registers it as one PCR.
   already exists.
 - **The title may stay in the customer's language** — the slug is latin
   kebab-case either way.
+- **A pre-existing glossary is adopted, not forked.** If the project already has
+  a glossary, it is recorded as `glossary_ref:` and consulted read-only; the
+  pipeline writes only its own canon, so a team's documentation is never
+  rewritten behind its back.
 
 ## Install
 
@@ -56,11 +64,12 @@ See [docs/installation.md] for alternative installation methods.
 
 ## Troubleshooting
 
-| Symptom                            | Fix                                                                        |
-| :--------------------------------- | :------------------------------------------------------------------------- |
-| Wrong id allocated                 | Ids come from directory names. Renaming a folder re-derives the next id.   |
-| It registered one PCR for a bundle | That is the default. Decline the split when you want one record instead.   |
-| Asking for language twice          | The values were supplied; the skill is told to infer from the vision text. |
+| Symptom                            | Fix                                                                                 |
+| :--------------------------------- | :---------------------------------------------------------------------------------- |
+| Wrong id allocated                 | Ids come from directory names. Renaming a folder re-derives the next id.            |
+| It registered one PCR for a bundle | That is the default. Decline the split when you want one record instead.            |
+| Asking for language twice          | The values were supplied; the skill is told to infer from the vision text.          |
+| Wrong glossary path                | The registry header is authoritative: fix `glossary:` / `glossary_ref:` there once. |
 
 ## License
 

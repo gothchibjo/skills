@@ -23,24 +23,34 @@ Two events, both in `03-technical.yaml`.
 | `verification`        | `method` (`test`, `manual-review`, `inspection`, `simulation`) + named `evidence` artifacts |
 | `guard_conditions`    | Seeded from constraints; every `(unresolved)` assumption becomes a guard                    |
 | `size_hint`           | `xs`–`l` heuristic from breadth and dependency count                                        |
+| `glossary`            | Load-bearing terms, definitions copied from the PCR's terms slice                           |
 
 Then it re-reads and parses the YAML it just wrote, and reports a coverage
 table: orphans on both sides, acceptance criteria that cannot be checked,
-unresolved assumptions carried forward as guards.
+unresolved assumptions carried forward as guards, glossary terms included and
+any open conflict.
 
-**`freeze` — seal.** Allowed only when the BR is `approved` _and_ the
-Assumptions Ledger has no `(unresolved)` items. Sets `status: frozen`, records
-who and when, and flips `requirement_freeze.passed: true`.
+**`freeze` — seal.** Allowed only when the BR is `approved`, the Assumptions
+Ledger has no `(unresolved)` items, and no glossary conflict is open. Sets
+`status: frozen`, records who and when, and flips
+`requirement_freeze.passed: true`.
 
 ## Design decisions worth knowing
 
 - **Generation depth depends on approval.** `approved` → the full field set.
   `proposed` → a structural draft only (`id`, `traces_to`, `type`, `title`,
-  `description`, `priority`, `acceptance_criteria`) with verification, guards
-  and size omitted, and a note that a full regeneration is owed after approval.
-  `draft` → refused outright.
+  `description`, `priority`, `acceptance_criteria`) with verification, guards,
+  size and glossary omitted, and a note that a full regeneration is owed after
+  approval. `draft` → refused outright.
 - **Coverage holes are reported, never dropped.** A BR with no REQ, or a REQ
   tracing to no BR, is surfaced in the report.
+- **A glossary conflict is a block, not a warning.** Every load-bearing term
+  must be defined in the PCR's terms slice; a definition that contradicts the
+  canon stops generation and refuses freeze. Other findings are reported and
+  allowed through, but a REQ built on a wrong definition passes review while
+  being wrong.
+- **Definitions are copied, never re-worded.** The YAML `glossary` block and the
+  terms slice must match; a mismatch is drift and freeze refuses.
 - **Evidence is named generically.** "test report", "traceability matrix",
   "review sign-off" — the tech stack is undecided at this stage, so a
   stack-specific artifact would be a guess.
@@ -63,12 +73,13 @@ See [docs/installation.md] for alternative installation methods.
 
 ## Troubleshooting
 
-| Symptom                            | Fix                                                                      |
-| :--------------------------------- | :----------------------------------------------------------------------- |
-| Generation refused                 | The BR is still `draft`. It must reach `proposed` first.                 |
-| A `proposed` BR produced thin REQs | Expected — approve the BR, then regenerate for the full field set.       |
-| Freeze refused                     | Both conditions are named: approve the BR, or resolve the ledger.        |
-| YAML will not parse                | It re-parses before reporting; fix the reported error before proceeding. |
+| Symptom                            | Fix                                                                                             |
+| :--------------------------------- | :---------------------------------------------------------------------------------------------- |
+| Generation refused                 | The BR is still `draft`. It must reach `proposed` first.                                        |
+| A `proposed` BR produced thin REQs | Expected — approve the BR, then regenerate for the full field set.                              |
+| Freeze refused                     | The named condition is unmet: approve the BR, resolve the ledger, or resolve the term conflict. |
+| A term used in a REQ is undefined  | Reported, not invented: add it to the terms slice (and the canon) first.                        |
+| YAML will not parse                | It re-parses before reporting; fix the reported error before proceeding.                        |
 
 ## License
 

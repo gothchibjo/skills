@@ -20,12 +20,13 @@ registered → elicitation → br_review → br_approved → technical → froze
 It resolves which record you mean, reads its current state, classifies your
 message into an event, and dispatches the matching phase skill.
 
-| Record file         | Holds                                                                       |
-| :------------------ | :-------------------------------------------------------------------------- |
-| `01-vision.md`      | PART A verbatim vision (immutable) + PART B Clarification Log (append-only) |
-| `02-business.md`    | The BR document: `draft → proposed → approved`, with `revisions[]`          |
-| `03-technical.yaml` | Machine-readable REQs and the four pipeline gates                           |
-| `04-plan.md`        | Phase 2: the development record (written by [req-develop])                  |
+| Record file                | Holds                                                                       |
+| :------------------------- | :-------------------------------------------------------------------------- |
+| `01-vision.md`             | PART A verbatim vision (immutable) + PART B Clarification Log (append-only) |
+| `02-business.md`           | The BR document: `draft → proposed → approved`, `revisions[]`, terms slice  |
+| `03-technical.yaml`        | Machine-readable REQs and the four pipeline gates                           |
+| `04-plan.md`               | Phase 2: the development record (written by [req-develop])                  |
+| `requirements/glossary.md` | Project-wide canonical glossary, append-only (`G-<nnn>`)                    |
 
 ## Events
 
@@ -52,9 +53,13 @@ with the list of legal events, never silently coerced.
   is a new revision entry, never a destructive edit.
 - **The registry is kept in step.** After every transition the `requirements/`
   registry row is updated with the new status and date.
-- **Freezing has two conditions**, not one: the BR must be `approved` _and_ the
-  Assumptions Ledger must have no unresolved items. Both are re-checked inside
-  the phase skill.
+- **Freezing has three conditions**, not one: the BR must be `approved`, the
+  Assumptions Ledger must have no unresolved items, and no glossary conflict may
+  be open. All are re-checked inside the phase skill.
+- **The glossary is canonical once and snapshotted per PCR.** The registry
+  header names the writable canon (`glossary:`) and, when the project already
+  has a glossary, a read-only `glossary_ref:`. Each PCR copies the definitions
+  it uses, so a frozen contract keeps its meaning even after the canon evolves.
 - **It writes files, it never commits.** Version control stays a human decision.
 - **It always reports the record path** as the last thing, so resuming later is
   a copy-paste.
@@ -82,12 +87,13 @@ installation methods.
 
 ## Troubleshooting
 
-| Symptom                         | Fix                                                                                        |
-| :------------------------------ | :----------------------------------------------------------------------------------------- |
-| It asks which PCR you mean      | Several records are open and your message named none. Name the id.                         |
-| "Illegal transition" on approve | The BR is not at `proposed` yet, or is already `approved`. Check `02-business.md`.         |
-| Freeze refused                  | BR not approved, or the Assumptions Ledger has `(unresolved)` items. Both are named.       |
-| A phase skill seems unavailable | Correct: the phases are `disable-model-invocation` and are only loaded through this skill. |
+| Symptom                         | Fix                                                                                                  |
+| :------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| It asks which PCR you mean      | Several records are open and your message named none. Name the id.                                   |
+| "Illegal transition" on approve | The BR is not at `proposed` yet, or is already `approved`. Check `02-business.md`.                   |
+| Freeze refused                  | BR not approved, the ledger has `(unresolved)` items, or a glossary conflict is open. All are named. |
+| A term means two things         | Expected stop: the conflict is a question, recorded as `(unresolved)` until you answer.              |
+| A phase skill seems unavailable | Correct: the phases are `disable-model-invocation` and are only loaded through this skill.           |
 
 ## License
 

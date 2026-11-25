@@ -72,6 +72,9 @@ Three things worth knowing before you type any of it:
    accumulate.
 5. Neither entry point commits anything. They write files; committing stays a
    human decision.
+6. A term is defined once, in `requirements/glossary.md`, and snapshotted into
+   every PCR that uses it. A conflicting definition stops the process — it is a
+   question, never an overwrite, and it blocks `freeze` while open.
 
 ## How it is wired
 
@@ -114,13 +117,21 @@ State lives in the record files, never in the agent's memory, so any session
 resumes a PCR by reading the folder. The skills expect this to be a normal,
 committed part of your project — nothing is global state.
 
+The glossary is the one project-wide artifact: `requirements/glossary.md` is the
+canon, and each PCR carries a snapshot of the terms it uses, so a frozen
+contract never changes meaning. An existing project glossary found elsewhere is
+recorded as read-only `glossary_ref:` in the registry header and is never
+edited.
+
 ```text
 requirements/
-  README.md        registry: one row per PCR           req-register, then every transition
+  README.md        registry: one row per PCR, glossary paths   req-register, then every transition
+  glossary.md      project-wide glossary, append-only          req-elicitation
   PCR-NNNN-<slug>/
     01-vision.md   PART A verbatim vision (immutable)  req-register
                    PART B clarification log           req-elicitation, append-only
     02-business.md BR: draft → proposed → approved     req-elicitation, approved at the event
+                   terms slice used by this PCR        req-elicitation
     03-technical.yaml  machine-readable REQs           req-technical-spec; gates flipped in place
     04-plan.md     plan, guard log, evidence matrix    req-plan, req-guards, req-verification
 ```

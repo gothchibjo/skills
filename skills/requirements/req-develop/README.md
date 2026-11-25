@@ -35,7 +35,8 @@ via `resume`.
 
 - **The contract is sealed.** REQ titles, descriptions and acceptance criteria
   cannot be edited during development. The `pipeline_gates` flags inside the
-  YAML are bookkeeping and may flip; nothing else in it changes.
+  YAML are bookkeeping and may flip; nothing else in it changes — including the
+  optional `glossary` block, which is the authoritative vocabulary when present.
 - **A scope deviation is a new PCR, not an edit.** Anything that looks like
   changing a frozen REQ is refused and routed to [req-workflow] as change
   control.

@@ -12,7 +12,9 @@ hold the human plan-approval gate (REQ-011).
 the REQ order is topological (`dependencies` first, ties by REQ id). One section
 per REQ carrying its `priority` and `size_hint`, a concrete task breakdown for
 the current stack, the `guard_conditions` to honor, and the
-`verification.evidence` it must produce with its method.
+`verification.evidence` it must produce with its method. When the contract has a
+`glossary` block, its definitions are the authoritative vocabulary — the
+project's `requirements/glossary.md` may have moved on since the freeze.
 
 The file opens with a **Plan invariants** block stating plainly that the
 contract is sealed and that REQ titles, descriptions and acceptance criteria are

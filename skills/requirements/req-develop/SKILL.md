@@ -29,11 +29,13 @@ record files, never in memory; any session resumes by reading them.
   process; the development status does not rewrite its rows).
 - `.../01-vision.md` — canonical requirements `status`; must be `frozen` before
   development starts.
-- `.../03-technical.yaml` — the frozen contract: 15+ `requirements[]` and
-  `pipeline_gates`. **Contract texts are sealed**: gate flags inside
-  `pipeline_gates` are execution bookkeeping and may flip; REQ
-  `title/description/acceptance_criteria/...` may NOT be edited (change control
-  → REQ-015).
+- `.../03-technical.yaml` — the frozen contract: 15+ `requirements[]`,
+  `pipeline_gates`, and an optional `glossary` block of load-bearing term
+  definitions. **Contract texts are sealed** — including the glossary
+  definitions: gate flags inside `pipeline_gates` are execution bookkeeping and
+  may flip; REQ `title/description/acceptance_criteria/...` and glossary
+  definitions may NOT be edited (change control → REQ-015). When the block is
+  present, it outranks `requirements/glossary.md`, which may have moved on.
 - `.../04-plan.md` — the development execution record. Front matter `status` is
   the canonical development state; body holds the plan, the guard log, and the
   evidence matrix.

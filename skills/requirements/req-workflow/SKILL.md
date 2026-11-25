@@ -26,12 +26,17 @@ memory: any session can pick a PCR back up by reading the files.
 ## Record layout
 
 - `requirements/README.md` — registry: one row per PCR
-  (`| PCR | Title | Status | Updated |`).
+  (`| PCR | Title | Status | Updated |`). Its header carries the glossary paths:
+  `glossary:` (writable canon, default `requirements/glossary.md`) and optional
+  `glossary_ref:` (an existing project glossary elsewhere, read-only).
+- `requirements/glossary.md` — project-wide canonical glossary, append-only,
+  `G-<nnn>` ids. Written in Phase 1 by req-elicitation; never written in
+  Phase 2.
 - `requirements/PCR-NNNN-<slug>/01-vision.md` — canonical record `status` in
   front matter + PART A (verbatim vision, immutable) + PART B (Clarification
   Log, append-only).
 - `.../02-business.md` — the BR document: `draft → proposed → approved`,
-  `revisions[]`, `approved_by/at`.
+  `revisions[]`, `approved_by/at`, plus the Terms Used in This PCR slice.
 - `.../03-technical.yaml` — machine-readable technical spec: `draft → frozen`;
   carries the 4 pipeline gates.
 
@@ -49,8 +54,9 @@ memory: any session can pick a PCR back up by reading the files.
 
 ## 2. Read state before acting
 
-Record status, business status, the last CL marker in PART B, and the unresolved
-count in the Assumptions Ledger.
+Record status, business status, the last CL marker in PART B, the unresolved
+count in the Assumptions Ledger (glossary conflicts are recorded there too), and
+the glossary paths from the registry header.
 
 ## 3. Classify the event (priority order)
 
@@ -97,8 +103,9 @@ After every transition update the registry row (`status`, `updated: <today>`).
 ## 5. Report
 
 Give the user: record path, what just happened, current state, and the next
-legal action. Always end with the record path (e.g.
-`requirements/PCR-0001-invoice-export/`) so the process resumes trivially later.
+legal action. Call out any open glossary conflict. Always end with the record
+path (e.g. `requirements/PCR-0001-invoice-export/`) so the process resumes
+trivially later.
 
 ## Notes
 
@@ -112,3 +119,8 @@ legal action. Always end with the record path (e.g.
   customer text is never rewritten.
 - History is append-only: PART B and `revisions[]` only grow; corrections go
   through revision entries, never destructive edits.
+- Glossary conflicts are hard blockers, not warnings: an unresolved conflict
+  sits in the Assumptions Ledger and therefore blocks `freeze`; one found in
+  Phase 2 fails a guard (`blocked`) and, if the meaning must change, returns
+  here as a new PCR. `glossary_ref:` is read-only — the pipeline never writes
+  it.

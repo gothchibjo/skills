@@ -4,7 +4,8 @@ description:
   "Create a new PCR record in the active repo: register the customer's vision
   verbatim as PART A of requirements/PCR-NNNN-<slug>/01-vision.md, open an empty
   PART B Clarification Log, write skeletons of 02-business.md and
-  03-technical.yaml, and add the PCR row to requirements/README.md. Phase of the
+  03-technical.yaml, confirm the project glossary paths in
+  requirements/README.md, and add the PCR row to the registry. Phase of the
   req-workflow state machine; load only via the Skill tool from req-workflow,
   never on your own."
 disable-model-invocation: true
@@ -24,6 +25,18 @@ file path) and any metadata the user already gave.
   `R/requirements/`; create if absent.
 - Registry = `R/requirements/README.md`; create if absent: heading
   `# Requirements Registry` and a table `| PCR | Title | Status | Updated |`.
+- Glossary paths go in the registry header, directly under the heading and above
+  the table, once per project. Paths are relative to the project root R:
+  - `glossary:` — the writable canon, default `requirements/glossary.md`. Do not
+    create an empty file here; req-elicitation creates it on the first term.
+  - `glossary_ref:` — an existing project glossary elsewhere
+    (`docs/glossary.md`, `CONTEXT.md`, …). Read-only: the pipeline consults it
+    and never edits it.
+  - If neither key is present, look for a glossary in this order:
+    `requirements/glossary.md`, `docs/glossary.md`, `GLOSSARY.md`, `CONTEXT.md`,
+    `docs/domain-glossary.md`. A hit under `requirements/` becomes `glossary:`;
+    any other hit becomes `glossary_ref:` while `glossary:` stays
+    `requirements/glossary.md`. Write both keys into the header.
 
 ## 2. Allocate the PCR id
 
@@ -102,7 +115,7 @@ as one PCR.
 
   # Stakeholders
 
-  # Glossary
+  # Terms Used in This PCR
 
   # Assumptions Ledger
 
@@ -129,5 +142,6 @@ as one PCR.
 
 ## 6. Report back to req-workflow
 
-Return `pcr`, the record folder path, `slug`, and the note that the next event
-is elicitation round 1 (fresh record, PART B empty).
+Return `pcr`, the record folder path, `slug`, the resolved glossary paths, and
+the note that the next event is elicitation round 1 (fresh record, PART B
+empty).

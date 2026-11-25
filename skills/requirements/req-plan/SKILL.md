@@ -21,7 +21,9 @@ PCR.
 ## Inputs
 
 Read `03-technical.yaml` (must be `status: frozen`) and any existing
-`04-plan.md`.
+`04-plan.md`. Its `glossary` block, when present, is the authoritative
+vocabulary: use those definitions rather than `requirements/glossary.md`, which
+may have moved on since the freeze.
 
 ## Event: plan — author `04-plan.md`
 
