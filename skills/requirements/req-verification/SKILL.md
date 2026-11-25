@@ -1,12 +1,11 @@
 ---
 name: req-verification
 description:
-  "Verification-evidence gate (REQ-013) and traceability (REQ-014) of the
-  frozen-contract pipeline: close each REQ only with evidence that matches its
-  declared verification.method, build the REQ↔evidence matrix and the
-  BR→REQ→evidence chain in 04-plan.md, document every gap (never hide it), and
-  flip the gate only when all REQs carry matching evidence. Phase of the
-  req-develop state machine; load only via the Skill tool from req-develop."
+  "Verification-evidence gate (REQ-013) and traceability (REQ-014): close a REQ
+  only with evidence matching its declared verification.method, keep the
+  REQ↔evidence matrix, document every gap, and flip the gate only when all REQs
+  are covered. Phase of req-develop; load only via the Skill tool from
+  req-develop."
 disable-model-invocation: true
 metadata:
   protected: "true"
@@ -15,12 +14,20 @@ metadata:
 
 # Phase: req-verification
 
-Called by req-develop with the event (`verify` | `complete`) and the target PCR.
+Called by req-develop with the event (`verify` | `complete`) and the target PCR
+plus the REQ ids in scope. Cost rules P1–P6 from req-develop apply.
 
 ## Inputs
 
-Read `03-technical.yaml` (frozen), `04-plan.md` (plan, guard log, evidence
-matrix), and the finished implementation work in the repo.
+Read only what the event needs:
+
+- `verify`: the REQ blocks of the REQs in scope (id, `acceptance_criteria`,
+  `verification`) by grep; the Evidence Matrix rows for those REQs; and the
+  implementation artifacts they name. Not the plan body, not the rest of the
+  contract.
+- `complete`: the full REQ id list (grep `id:` in `03-technical.yaml`) and the
+  Evidence Matrix. A REQ id with no `done`/`waived` row is the only thing you
+  need to know about it — no need to read its body.
 
 ## Event: verify — record evidence per REQ
 
@@ -52,10 +59,12 @@ Rules:
 Allowed only when every REQ in `03-technical.yaml` has a `done` (or explicitly
 `waived`) matrix row. On success:
 
-- `03-technical.yaml`: `pipeline_gates.verification_evidence.passed: true`.
+- Edit `03-technical.yaml` in place:
+  `pipeline_gates.verification_evidence.passed: true`. One key.
 - `04-plan.md`: `status: done`; append the traceability chain report: for every
-  REQ show `BR-<n> → REQ-<n> → evidence artifact` (REQ-014). Every gap in the
-  chain is listed explicitly — never hidden.
+  REQ show `BR-<n> → REQ-<n> → evidence artifact` (REQ-014). One line per REQ,
+  ids and artifact names only. Every gap in the chain is listed explicitly —
+  never hidden.
 - Report to the user: gate status summary, the traceability chain, and that the
   contract is fully executed (`plan_approval`, `guard_conditions`,
   `verification_evidence`, and `requirement_freeze` all passed).

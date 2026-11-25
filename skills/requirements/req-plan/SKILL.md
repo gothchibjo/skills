@@ -1,12 +1,10 @@
 ---
 name: req-plan
 description:
-  "Build the implementation plan for a frozen PCR strictly from its sealed
-  03-technical.yaml (REQ-010): per-REQ task breakdown, topological order by
-  dependencies, the evidence each REQ must produce, and the plan-approval gate
-  (REQ-011) that human-approves the plan before any implementation starts. Phase
-  of the req-develop state machine; load only via the Skill tool from
-  req-develop."
+  "Build the implementation plan for a frozen PCR from its sealed
+  03-technical.yaml: per-REQ task breakdown in dependency order, the evidence each
+  REQ must produce, and the Plan Approval gate. Phase of req-develop; load only
+  via the Skill tool from req-develop."
 disable-model-invocation: true
 metadata:
   protected: "true"
@@ -16,14 +14,17 @@ metadata:
 # Phase: req-plan
 
 Called by req-develop with the event (`plan` | `plan_approve`) and the target
-PCR.
+PCR. Cost rules P1–P6 from req-develop apply.
 
 ## Inputs
 
-Read `03-technical.yaml` (must be `status: frozen`) and any existing
-`04-plan.md`. Its `glossary` block, when present, is the authoritative
-vocabulary: use those definitions rather than `requirements/glossary.md`, which
-may have moved on since the freeze.
+- `plan`: read the frozen `03-technical.yaml` in full — planning covers every
+  REQ, so this is the one event that legitimately needs the whole contract. Its
+  `glossary` block, when present, is the authoritative vocabulary: use those
+  definitions rather than `requirements/glossary.md`, which may have moved on
+  since the freeze. Do not read `01-vision.md` or `02-business.md`.
+- `plan_approve`: read `04-plan.md` front matter and confirm the file exists
+  with `status: planning`. Do not re-read the plan body.
 
 ## Event: plan — author `04-plan.md`
 
@@ -55,7 +56,8 @@ Body:
   - evidence to produce (from `verification.evidence`) and the
     `verification.method`
 - **Plan lifecycle** — a new `plan` event re-drafts the plan; keep prior draft
-  revisions append-only under a `Revisions` block (never delete history).
+  revisions append-only under a `Revisions` block (never delete history). Append
+  the revision; do not rewrite the rest of the document.
 
 Gate rule: the `plan` event alone does NOT flip `plan_approval` — implementation
 is impossible until a human approves.
@@ -71,13 +73,13 @@ Allowed only when:
 
 On success:
 
-- `04-plan.md`: `status: plan_approved`, `approved_by: <who>`,
-  `approved_at: <today>` (keep the approval and prior draft in `Revisions` too —
-  history is append-only).
+- `04-plan.md`: edit front matter to `status: plan_approved`,
+  `approved_by: <who>`, `approved_at: <today>`, and append the approval to
+  `Revisions` — history is append-only, the plan body is untouched.
 - `03-technical.yaml`: `pipeline_gates.plan_approval.passed: true`. Nothing else
-  about the YAML changes.
-- Report to the user: approved plan, the REQ order, and that implementation is
-  now open (`implement`).
+  about the YAML changes — one line, edited in place.
+- Report to the user: approved plan, the REQ order (ids only), and that
+  implementation is now open (`implement`).
 
 Refuse otherwise, naming the failing condition. Never flip `plan_approval`
 without human approval, and never edit REQ texts while doing it.

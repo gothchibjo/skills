@@ -46,6 +46,7 @@ Phase 2, from the sealed contract to verified code:
 /develop PCR-0001 plan          # a plan from the frozen spec -> 04-plan.md
 PCR-0001 plan looks good        # plan_approval: a human approved the plan
 PCR-0001 implement REQ-010      # implement; guard_conditions checked before the step
+PCR-0001 implement REQ-010..013 # several REQs: one pass, one guard check each
 PCR-0001 REQ-013 is done        # evidence for that REQ recorded (verification)
 PCR-0001 all REQs closed        # verification_evidence: the contract is executed
 PCR-0001 status                 # state, and the REQs still open
@@ -101,6 +102,32 @@ Phase 2 — /develop
 
 The phase skills carry `disable-model-invocation: true`. The agent will never
 reach for them on its own; only the entry point loads them.
+
+[req-elicitation] borrows the interview method of the [grilling] skill but
+inlines it, so the family has no skill dependency — installing the eight skills
+is enough.
+
+## Why the phases read so little
+
+Every skill in the family is under ~9 KB, which is not where the cost is. The
+cost is in what the skills make the agent read and write, and it multiplies as a
+record grows: a PCR at twenty REQs has a contract and a plan of tens of
+kilobytes each, all append-only.
+
+So each entry point carries a short cost discipline that the phases inherit:
+
+- **Sliced reads.** Classification reads front matter and gate flags only; a
+  phase reads the one REQ block, table row or section it needs, found by grep.
+  The one legitimate whole-document read is the BR document when generating the
+  YAML, and the contract when planning.
+- **Edit, never rewrite.** Append-only logs are appended, gate flags are edited
+  in place, and a document is never regenerated to change one section.
+- **No echo.** Validation (a silent `yaml.safe_load`) replaces re-reading what
+  was just written.
+- **One report.** Phases return a compact result; only the entry point writes to
+  the user.
+- **Batch.** Several REQs — or several clarification items — in one message are
+  one event with one pass over the record.
 
 | Phase skill          | Dispatched by  | On event                     |
 | :------------------- | :------------- | :--------------------------- |

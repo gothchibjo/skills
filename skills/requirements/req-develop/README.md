@@ -31,6 +31,9 @@ via `resume`.
 | all REQs closed          | `complete`     | `verifying`                | verification gate passes, `done`       |
 | status                   | `status`       | any                        | report only                            |
 
+Name several REQs in one message (`implement REQ-010..013`) and they are one
+event: one pass over the contract, one guard check per REQ.
+
 ## Design decisions worth knowing
 
 - **The contract is sealed.** REQ titles, descriptions and acceptance criteria

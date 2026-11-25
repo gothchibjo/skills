@@ -1,18 +1,12 @@
 ---
 name: req-workflow
 description:
-  "State machine for the end-to-end requirements process in the active repo
-  (requirements/): register an incoming customer vision as a PCR, elicit
-  clarifications, approve the business requirements with the customer, generate
-  the machine-readable technical spec, and freeze it. The single entry point.
-  Trigger when the user talks about requirements management, PCRs or BRs, a
-  customer vision/change request, or an RFI from a stakeholder — e.g. 'new
-  request', 'register the requirements', 'continue PCR-0001', 'resume PCR-0001',
-  'customer answers received', 'here are the answers', 'PCR-0001 requirements
-  agreed', 'customer approved', 'customer revisions', 'write the technical
-  spec', 'tech spec', 'freeze PCR-0001', 'PCR-0001 status'. The /requirements
-  command also routes here. Not for writing application code; this shapes
-  requirements only."
+  "State machine for the requirements process in the active repo (requirements/):
+  register a customer vision as a PCR, elicit clarifications, approve the
+  business requirements, generate and freeze the technical spec. The single entry
+  point — /requirements routes here, as do 'new request', 'here are the answers',
+  'customer approved', 'tech spec', 'freeze PCR-0001'. Not for writing
+  application code."
 metadata:
   protected: "true"
   copyright: "© 2026 github.com/gothchibjo"
@@ -57,12 +51,20 @@ memory: any session can pick a PCR back up by reading the files.
 - No id and exactly one record in the registry → it.
 - No id and multiple records → show `status` and ask which.
 
-## 2. Read state before acting
+## 2. Read state before acting — metadata only
 
-Record status, business status, the last CL marker in PART B, the unresolved
-count in the Assumptions Ledger (glossary conflicts are recorded there too), the
-glossary paths from the registry header, and the registry rows for the requester
-and the approver.
+Classification needs metadata, not documents. Read:
+
+- `01-vision.md` and `02-business.md` front matter (`status`);
+- the target PCR's registry row, and the `glossary:` / `glossary_ref:` keys in
+  the registry header;
+- `03-technical.yaml` front matter and `pipeline_gates` only — never the
+  `requirements[]` array.
+
+Pull the few markers a report needs (`(awaiting)`, `(unresolved)`) with grep
+instead of reading the log. Document bodies — PART A, PART B, the BR list, the
+REQ list — belong to the phase that consumes them. Reading them here charges
+every event twice for the same bytes.
 
 ## 3. Classify the event (priority order)
 
@@ -89,7 +91,8 @@ pre-approval structural draft. `freeze` is never legal while BR ≠ `approved`
 ## 4. Dispatch and persist
 
 Call the Skill tool with the phase name, passing context: record path, event,
-any pasted answers/revisions/vision text.
+any pasted answers/revisions/vision text. Do not restate the record's contents
+in the dispatch — the phase reads what it needs itself.
 
 - `new` → `req-register`, then immediately `req-elicitation` (round 1); record
   status `elicitation`.
@@ -106,16 +109,41 @@ any pasted answers/revisions/vision text.
   `req-elicitation` only if BR wording needs rework.
 - `technical` → `req-technical-spec`; status `technical`.
 - `freeze` → `req-technical-spec`; on success status `frozen`.
-- `status` → skip dispatch, report.
+- `status` → skip dispatch, report from §2 metadata and stop. Do not read the
+  documents to answer it.
 
 After every transition update the registry row (`status`, `updated: <today>`).
 
-## 5. Report
+## 5. Report — once per event
 
-Give the user: record path, what just happened, current state, and the next
-legal action. Call out any open glossary conflict. Always end with the record
-path (e.g. `requirements/PCR-0001-invoice-export/`) so the process resumes
-trivially later.
+The phase returns a compact result to this skill; the phase does not address the
+user. You give the user: record path, what just happened, current state, and the
+next legal action. Call out any open glossary conflict. Always end with the
+record path (e.g. `requirements/PCR-0001-invoice-export/`) so the process
+resumes trivially later.
+
+## 6. Cost discipline
+
+R1–R6 bind this skill and every phase it dispatches. Phase skills inherit them
+by reference instead of restating them.
+
+- **R1 Sliced reads.** Read the smallest span that answers the question: front
+  matter, one named section (grep for the heading or id), one REQ block, one
+  table row. Never read a whole artifact to use one part of it.
+- **R2 Edit, never rewrite.** `02-business.md`, `03-technical.yaml` and every
+  append-only log are patched in place. Do not regenerate a document to change a
+  section, and never rewrite content you did not change.
+- **R3 No echo.** After writing, do not print or re-read the written content.
+  Validate with a command whose output is a single line (a `yaml.safe_load` that
+  prints nothing, a `git diff --stat`).
+- **R4 One report.** Phases return `outcome`, changed paths and remaining
+  blockers. Only this skill writes to the user.
+- **R5 Batch.** One pass over the record serves every item in the request. A
+  message covering several items is one event, not a loop of events.
+- **R6 Facts, cheaply.** Look up facts with the cheapest sufficient tool: grep
+  or a sliced read before a subagent. A subagent is for genuinely multi-file
+  exploration and answers in a short digest; it never replaces reading a file
+  whose path you already know.
 
 ## Notes
 

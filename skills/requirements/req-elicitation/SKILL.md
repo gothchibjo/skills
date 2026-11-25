@@ -2,16 +2,10 @@
 name: req-elicitation
 description:
   "Clarify and formalize business requirements for a PCR: run the grilling
-  interview (design-tree rounds, numbered questions, recommended answers),
-  append every round to PART B of the PCR's 01-vision.md as CL entries (awaiting
-  → answered, verbatim customer answers as VENDOR blocks), and once the frontier
-  is empty author 02-business.md with atomic, concise, contradiction-free,
-  MoSCoW-sorted business requirements traced to [V §x] and [CL-n]. Maintains the
-  project glossary (requirements/glossary.md): appends new terms with stable
-  G-<nnn> ids and stops on a definition conflict instead of overwriting. Maintains
-  the project stakeholder registry (requirements/stakeholders.md) and the PCR's
-  own stakeholder slice with stable S-<nnn> ids. Phase of the req-workflow state
-  machine; load only via the Skill tool from req-workflow."
+  interview in rounds, append each round to PART B as CL entries, and author
+  02-business.md once the frontier is empty. Maintains the glossary canon and the
+  stakeholder registry with stable ids. Phase of req-workflow; load only via the
+  Skill tool from req-workflow."
 disable-model-invocation: true
 metadata:
   protected: "true"
@@ -22,25 +16,29 @@ metadata:
 
 Clarifies a PCR's vision into formalized business requirements. Called by
 req-workflow with the event (`new` | `continue` | `answers`) and the target PCR.
+Cost rules R1–R6 from req-workflow apply; §1 spells out the sliced reads this
+phase needs.
 
-## 1. Load the record
+## 1. Load the record — as little as the event needs
 
-Read `requirements/PCR-NNNN-<slug>/01-vision.md` (PART A verbatim vision, PART B
-Clarification Log) and `02-business.md` if present.
+- **Every round.** `01-vision.md` front matter (`artifact_language`), PART A
+  (the vision is the interview's subject) and **only** the latest CL entry and
+  any `(awaiting)` entry — grep for `### CL-` and `(awaiting)`, do not read PART
+  B whole. `02-business.md` front matter only.
+- **Authoring the BR (§6).** Now read every `(answered)` CL entry and the
+  existing `02-business.md` sections being rewritten.
+- **A term in play.** grep the canon (and `glossary_ref:`) for the term, its
+  aliases and its id — never read the whole glossary, which is project-wide and
+  keeps growing.
+- **An actor in play.** grep `requirements/stakeholders.md` for the name — never
+  read the roster whole.
+- **`status`-style resume.** Front matter, the awaiting marker and the open
+  questions from grep are enough; no body reads.
 
-Read the project glossary too: the path from the registry header (`glossary:`,
-default `requirements/glossary.md`) plus `glossary_ref:` if present. The canon
-is append-only and writable; `glossary_ref:` is read-only and never written.
-
-Read `requirements/stakeholders.md` as well; if an older record predates it,
-create it with heading `# Stakeholders` and the registry table header.
-
-- Next CL number = max existing `CL-<n>` + 1.
-- Next G number = max existing `G-<nnn>` in the canon + 1, zero-padded to 3.
-- Next S number = max existing `S-<nnn>` in the stakeholder registry + 1,
-  zero-padded to 3.
-- Note any `CL-<n> (awaiting)` entries: questions already asked, answers not yet
-  recorded (a previous session stopped there).
+Then derive: next CL number (max `CL-<n>` + 1), next G number (max `G-<nnn>` +
+1, zero-padded to 3), next S number (max `S-<nnn>` + 1, zero-padded to 3). If
+`stakeholders.md` is absent, create it with heading `# Stakeholders` and the
+registry table header.
 
 ## 2. Interpret the event
 
@@ -57,9 +55,11 @@ it. The frontier = questions whose prerequisites are already settled. Ask the
 whole frontier in one round: number each question and give a recommended answer
 (`➡️ ...`). Wait for answers before the next round.
 
-- Facts are yours to find (filesystem, tools, subagents); decisions and domain
-  knowledge belong to the customer proxy (the terminal user). Never ask for
-  anything you can look up.
+- Facts are yours to find; decisions and domain knowledge belong to the customer
+  proxy (the terminal user). Never ask for anything you can look up — but look
+  it up with grep or a sliced read, and reach for a subagent only when the
+  answer genuinely spans many files. A subagent answers in a short digest; do
+  not have it dump files back.
 - A term that the canon or `glossary_ref:` defines differently (same term or
   alias, other meaning) is a contradiction: ask a numbered question quoting both
   definitions. Never resolve it by overwriting the canon.
@@ -69,9 +69,11 @@ whole frontier in one round: number each question and give a recommended answer
 - Nothing is ignored silently: ambiguity, contradiction, and missing detail all
   become questions. Deliver and record each round fully.
 
-## 4. Persist each round into PART B (append-only)
+## 4. Persist each round into PART B (append-only, composed once)
 
-Immediately after posing a round, append:
+Compose the round **once**. Append exactly that text to PART B, then present the
+same text to the user — do not write the questions for the file and again for
+the chat.
 
 ```markdown
 ### CL-<n> (awaiting) — <YYYY-MM-DD>
@@ -98,7 +100,11 @@ as unresolved and still author the document.
 ## 6. Author `02-business.md`
 
 Front matter: `status: proposed`, `revised: <today>`, `revisions: []` (keep
-`pcr`, `based_on`, `approved_by/at` fields). Sections:
+`pcr`, `based_on`, `approved_by/at` fields).
+
+Fill the skeleton's sections once. On a rework, edit only the sections the
+feedback touches — never regenerate the whole document, and never rewrite
+sections whose text did not change.
 
 - **Context & Goals** — 2–5 crisp sentences.
 - **Stakeholders for This Change** — only those who matter here, one line each.
@@ -179,7 +185,8 @@ table header. One table, append-only:
   the old row's `status` to `superseded-by G-<nnn>`. Flipping `status` is the
   only mutation an existing row ever receives.
 - Write definitions in `artifact_language`; keep the term in the customer's
-  words and put synonyms in `aliases`. Never write `glossary_ref:`.
+  words and put synonyms in `aliases`. Never write `glossary_ref:`. Never read
+  the canon end to end — grep the term, then edit the row.
 
 ## 8. Maintain the stakeholder registry
 
@@ -195,8 +202,9 @@ table header. One table, append-only:
   `decision-maker | influencer | recipient | blocker`; `status`:
   `active | inactive | superseded-by S-<nnn>`. Role, type and authority are
   decisions — ask, never guess. `source` is `PCR-<nnnn>/<today>`.
-- Match actors by name, case-insensitively. An actor already present with the
-  same role and authority is referenced by id, never re-added.
+- Match actors by name, case-insensitively, by grepping the table. An actor
+  already present with the same role and authority is referenced by id, never
+  re-added.
 - A changed role or authority is not an edit: after the user confirms, append
   the new row and flip the old one to `superseded-by S-<nnn>`. A person leaving
   is `inactive`, never a deletion.
@@ -208,6 +216,7 @@ table header. One table, append-only:
 
 ## 9. Report back to req-workflow
 
-Report the outcome: BR composed (ready for `br_review`), resumed with a new
+Return a compact result: BR composed (ready for `br_review`), resumed with a new
 `(awaiting)` CL, or an error. Name any open glossary conflict, the terms added
-to the canon, and the stakeholder rows added or changed.
+to the canon, and the stakeholder rows added or changed. Do not write a
+user-facing report — req-workflow owns that.

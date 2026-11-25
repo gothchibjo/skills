@@ -1,14 +1,10 @@
 ---
 name: req-register
 description:
-  "Create a new PCR record in the active repo: register the customer's vision
-  verbatim as PART A of requirements/PCR-NNNN-<slug>/01-vision.md, open an empty
-  PART B Clarification Log, write skeletons of 02-business.md and
-  03-technical.yaml, confirm the project glossary paths in
-  requirements/README.md, create the project stakeholder registry, and add the
-  PCR row to the requirements registry. Phase of the
-  req-workflow state machine; load only via the Skill tool from req-workflow,
-  never on your own."
+  "Create a new PCR record: register the vision verbatim as PART A, open the
+  Clarification Log, write skeletons of 02-business.md and 03-technical.yaml,
+  resolve the glossary paths and the stakeholder registry, and add the registry
+  row. Phase of req-workflow; load only via the Skill tool from req-workflow."
 disable-model-invocation: true
 metadata:
   protected: "true"
@@ -18,7 +14,8 @@ metadata:
 # Phase: req-register
 
 Creates a new PCR record in the active repo. Receives the vision source (text or
-file path) and any metadata the user already gave.
+file path) and any metadata the user already gave. Cost rules R1–R6 from
+req-workflow apply: one question batch, one write per file, no echo.
 
 ## 1. Determine root and registry
 
@@ -33,11 +30,12 @@ file path) and any metadata the user already gave.
   - `glossary_ref:` — an existing project glossary elsewhere
     (`docs/glossary.md`, `CONTEXT.md`, …). Read-only: the pipeline consults it
     and never edits it.
-  - If neither key is present, look for a glossary in this order:
-    `requirements/glossary.md`, `docs/glossary.md`, `GLOSSARY.md`, `CONTEXT.md`,
-    `docs/domain-glossary.md`. A hit under `requirements/` becomes `glossary:`;
-    any other hit becomes `glossary_ref:` while `glossary:` stays
-    `requirements/glossary.md`. Write both keys into the header.
+  - If neither key is present, look for a glossary in this order and stop at the
+    first hit — do not scan the repo: `requirements/glossary.md`,
+    `docs/glossary.md`, `GLOSSARY.md`, `CONTEXT.md`, `docs/domain-glossary.md`.
+    A hit under `requirements/` becomes `glossary:`; any other hit becomes
+    `glossary_ref:` while `glossary:` stays `requirements/glossary.md`. Write
+    both keys into the header.
 - Stakeholders = `R/requirements/stakeholders.md`; create if absent with heading
   `# Stakeholders` and a table
   `| id | actor | role | type | authority | status | source |`. Fixed path, no
@@ -58,7 +56,9 @@ Ask for anything still unknown (Question tool):
 - title — short, may stay in the customer's language;
 - channel — email / meeting / paste / git issue / etc.;
 - artifact_language — `ru` or `en` (the artifacts are ours: CL questions, BR,
-  YAML; the vision itself stays in its source language).
+  YAML; the vision itself stays in its source language). Pick for the humans who
+  read the record; note that the same text costs roughly twice the tokens in
+  Cyrillic as in English, which matters on a long-lived record.
 - source_language — infer from the vision text. Do not re-ask what was already
   supplied.
 
@@ -72,7 +72,8 @@ as one PCR.
 
 ## 5. Write the record
 
-`R/requirements/PCR-NNNN-<slug>/`
+`R/requirements/PCR-NNNN-<slug>/` — three files plus one registry row, nothing
+else.
 
 - `01-vision.md` front matter:
   ```yaml
@@ -147,6 +148,6 @@ as one PCR.
 
 ## 6. Report back to req-workflow
 
-Return `pcr`, the record folder path, `slug`, the resolved glossary paths, the
-stakeholder registry path, and the note that the next event is elicitation round
-1 (fresh record, PART B empty).
+Return a compact result: `pcr`, record folder path, `slug`, resolved glossary
+paths, stakeholder registry path, and the note that the next event is
+elicitation round 1.

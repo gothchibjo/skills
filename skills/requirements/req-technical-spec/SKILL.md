@@ -1,15 +1,10 @@
 ---
 name: req-technical-spec
 description:
-  "Generate the machine-readable technical requirements
-  (requirements/PCR-NNNN-<slug>/03-technical.yaml) from the PCR's approved (or
-  proposed, as structural draft) business requirements: deterministic BR→REQ
-  mapping, coverage/traceability report with warnings (not blocks), glossary
-  validation against the project canon, YAML validation, and the freeze action
-  that seals the spec (Requirement Freeze gate) once the BR is approved, the
-  Assumptions Ledger is free of unresolved items, and no glossary conflict is
-  open. Phase of the req-workflow state machine; load only via the Skill tool
-  from req-workflow."
+  "Generate the machine-readable 03-technical.yaml from a PCR's business
+  requirements: deterministic BR→REQ mapping, coverage report, glossary
+  validation, YAML validation, and the Requirement Freeze gate. Phase of
+  req-workflow; load only via the Skill tool from req-workflow."
 disable-model-invocation: true
 metadata:
   protected: "true"
@@ -20,14 +15,21 @@ metadata:
 
 Turns a PCR's business requirements into the machine-ready `03-technical.yaml`.
 Called by req-workflow with the event (`technical` | `freeze`) and the target
-PCR.
+PCR. Cost rules R1–R6 from req-workflow apply.
 
 ## Inputs
 
-Read `01-vision.md` (V + CL), `02-business.md` (BR document, status, and the
-PCR's Terms Used in This PCR slice), the project glossary named by the registry
-header (`glossary:`, default `requirements/glossary.md`, plus read-only
-`glossary_ref:`), and the existing `03-technical.yaml` if any.
+- `technical`: read `02-business.md` in full — it is the single source of the
+  mapping, and this is the one event that legitimately needs all of it. Do not
+  read `01-vision.md`: sources already reach you through the BRs' `traces to`
+  lines.
+- `freeze`: read front matter of `03-technical.yaml` and `02-business.md`, the
+  YAML `glossary` block (it is small), then grep the ledger for `(unresolved)`
+  and the terms slice for the disputed term. Do not re-read the generated REQ
+  set.
+- Glossary: grep the canon named by the registry header (`glossary:`, default
+  `requirements/glossary.md`, plus read-only `glossary_ref:`) for each term in
+  play. Never read it whole.
 
 ## Event: technical — generate
 
@@ -99,14 +101,19 @@ Map every business requirement to REQ entries.
 - A conflict already recorded as `(unresolved)` in the Assumptions Ledger is a
   freeze blocker; do not duplicate it as a guard condition.
 
-### Verify and report
+### Write and verify
 
-- Write the YAML, then re-read and parse it
-  (`python3 -c "import yaml,sys; yaml.safe_load(open('<path>'))"` or `yq`) — fix
-  any parse error before reporting success.
-- Coverage report to the user: BR→REQ mapping table, orphans, non-verifiable
-  acceptance criteria, unresolved assumptions carried as guards, glossary terms
-  included and any open conflict.
+- Write the YAML once. If it already exists and this is a regeneration, replace
+  the file in one write — partial patching across a changed BR set is what
+  produces drift.
+- Validate without emitting the file:
+  `python3 -c "import yaml; yaml.safe_load(open('<path>'))"` must exit 0 and
+  print nothing. Never `cat` the result, never re-read it to "check" — a parse
+  error is the only signal you need.
+- Coverage report to the user: BR→REQ mapping as a two-column table of ids, plus
+  orphans, non-verifiable acceptance criteria, unresolved assumptions carried as
+  guards, glossary terms included and any open conflict. Ids and counts only —
+  no restating descriptions.
 - Do not modify `01-vision.md` or `02-business.md`.
 
 ## Event: freeze — seal
@@ -122,8 +129,9 @@ or resolve the term conflict). Before sealing, check that every `glossary` entry
 in the YAML matches the definition in `02-business.md`; a mismatch is drift —
 refuse and regenerate. On success:
 
-- Set YAML `status: frozen`, `frozen_by: <who>`, `frozen_at: <today>`,
-  `pipeline_gates.requirement_freeze.passed: true`.
+- Edit the YAML in place: `status: frozen`, `frozen_by: <who>`,
+  `frozen_at: <today>`, `pipeline_gates.requirement_freeze.passed: true`. Change
+  those keys only.
 - A frozen spec is sealed: later `technical` events are refused — scope change
   at this point requires a new PCR (change control, Phase 2).
 - Report `frozen` back to req-workflow.
