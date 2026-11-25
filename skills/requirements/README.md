@@ -104,12 +104,11 @@ The phase skills carry `disable-model-invocation: true`. The agent will never
 reach for them on its own; only the entry point loads them.
 
 [req-elicitation] borrows the interview method of the [grilling] skill but
-inlines it, so the family has no skill dependency — installing the eight skills
-is enough.
+inlines it; no skill is loaded for the interview.
 
 ## Why the phases read so little
 
-Every skill in the family is under ~9 KB, which is not where the cost is. The
+Every skill in the family is under ~11 KB, which is not where the cost is. The
 cost is in what the skills make the agent read and write, and it multiplies as a
 record grows: a PCR at twenty REQs has a contract and a plan of tens of
 kilobytes each, all append-only.
@@ -118,8 +117,9 @@ So each entry point carries a short cost discipline that the phases inherit:
 
 - **Sliced reads.** Classification reads front matter and gate flags only; a
   phase reads the one REQ block, table row or section it needs, found by grep.
-  The one legitimate whole-document read is the BR document when generating the
-  YAML, and the contract when planning.
+  Three whole-document reads are deliberate and named: the BR document when
+  generating the YAML, the contract when planning, and PART B when authoring the
+  BR — each happens once per revision, not once per event.
 - **Edit, never rewrite.** Append-only logs are appended, gate flags are edited
   in place, and a document is never regenerated to change one section.
 - **No echo.** Validation (a silent `yaml.safe_load`) replaces re-reading what
@@ -138,8 +138,8 @@ So each entry point carries a short cost discipline that the phases inherit:
 | [req-guards]         | `req-develop`  | `implement`, `resume`        |
 | [req-verification]   | `req-develop`  | `verify`, `complete`         |
 
-[req-elicitation] runs the [grilling] interview, so that skill is a dependency
-of the family.
+[req-elicitation] inlines the interview method of [grilling]; no other skill is
+loaded, so the family has no dependency beyond these eight.
 
 ## The record
 
@@ -179,7 +179,7 @@ order:
 | :---------------------- | :------------------- | :---------------------------------------- |
 | `requirement_freeze`    | `req-technical-spec` | BR approved, ledger resolved, spec sealed |
 | `plan_approval`         | `req-plan`           | a human approved the plan                 |
-| `guard_conditions`      | `req-guards`         | every guard currently checks out          |
+| `guard_conditions`      | `req-guards`         | every REQ's latest check passes           |
 | `verification_evidence` | `req-verification`   | every REQ carries matching evidence       |
 
 A frozen contract's REQ texts are sealed. Changing scope mid-flight is a new PCR

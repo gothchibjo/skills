@@ -23,12 +23,13 @@ Every check is appended to the Guard Log in `04-plan.md`:
 
 None failing → the step is announced clean and `implementing` begins. Any
 failing → status `blocked`, the step is refused, and every failing guard is
-listed with the evidence of its check. **No gate is flipped in either case by
-this skill alone** — `guard_conditions.passed` becomes true only once all guards
-are clean, and is forced back to false whenever any guard fails.
+listed with the evidence of its check. **No gate is flipped off a partial
+check**: `guard_conditions.passed` is true only when every REQ in the contract
+carries a latest log row of `pass`, and any unchecked or failing REQ keeps it
+false.
 
-`resume` re-runs the failed checks: still failing keeps `blocked`, clean returns
-to `implementing`.
+`resume` re-runs the failed checks and appends the re-check rows: still failing
+keeps `blocked`, clean returns to `implementing`.
 
 ## Design decisions worth knowing
 

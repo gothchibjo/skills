@@ -75,8 +75,9 @@ never re-described per PCR.
 
 ## Install
 
-Not installed on its own; it ships with the requirements pipeline. It calls
-[grilling], which ships with the same install.
+Not installed on its own; it ships with the requirements pipeline. It inlines
+the interview method of [grilling] instead of loading that skill, so nothing
+else needs to be installed with the family.
 
 ```bash
 npx skills add gothchibjo/skills -g -a opencode

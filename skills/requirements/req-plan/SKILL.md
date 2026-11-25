@@ -14,7 +14,8 @@ metadata:
 # Phase: req-plan
 
 Called by req-develop with the event (`plan` | `plan_approve`) and the target
-PCR. Cost rules P1–P6 from req-develop apply.
+PCR. The cost discipline from req-develop applies: sliced reads, edits in place,
+no echo, one report returned to the entry point.
 
 ## Inputs
 
@@ -23,8 +24,12 @@ PCR. Cost rules P1–P6 from req-develop apply.
   `glossary` block, when present, is the authoritative vocabulary: use those
   definitions rather than `requirements/glossary.md`, which may have moved on
   since the freeze. Do not read `01-vision.md` or `02-business.md`.
+- `plan` over an existing `04-plan.md`: additionally read that file's front
+  matter and its `Revisions` block — a re-plan appends to them, never replaces
+  them.
 - `plan_approve`: read `04-plan.md` front matter and confirm the file exists
-  with `status: planning`. Do not re-read the plan body.
+  with `status: planning`. The REQ order for the report comes from
+  `grep '^### REQ-' 04-plan.md`; do not re-read the plan body otherwise.
 
 ## Event: plan — author `04-plan.md`
 
@@ -49,8 +54,8 @@ Body:
   that looks like a scope deviation routes to change control (REQ-015 → new PCR
   via req-workflow), not to a plan edit.
 - **Execution order** — topological: `dependencies` first, ties by REQ id; one
-  section per REQ:
-  - `REQ-<n> — <title>` (`priority`, `size_hint`)
+  section per REQ, as a `###` heading (other phases grep `^### REQ-`):
+  - `### REQ-<n> — <title>` (`priority`, `size_hint`)
   - task breakdown: concrete, checkable work items for the current tech stack
   - guard_conditions to honor (each is a pre-step check for req-guards)
   - evidence to produce (from `verification.evidence`) and the
@@ -58,6 +63,23 @@ Body:
 - **Plan lifecycle** — a new `plan` event re-drafts the plan; keep prior draft
   revisions append-only under a `Revisions` block (never delete history). Append
   the revision; do not rewrite the rest of the document.
+
+Authored once, with the logs present and empty — later phases locate them by
+heading, so the headings are part of the contract:
+
+```markdown
+## Revisions
+
+## Guard Log
+
+| date | REQ | guard | check | result (pass/fail) |
+| :--- | :-- | :---- | :---- | :----------------- |
+
+## Evidence Matrix
+
+| REQ | verification.method | evidence artifact | status (open/done/waived) | reason (waived only) |
+| :-- | :------------------ | :---------------- | :------------------------ | :------------------- |
+```
 
 Gate rule: the `plan` event alone does NOT flip `plan_approval` — implementation
 is impossible until a human approves.
@@ -78,7 +100,7 @@ On success:
   `Revisions` — history is append-only, the plan body is untouched.
 - `03-technical.yaml`: `pipeline_gates.plan_approval.passed: true`. Nothing else
   about the YAML changes — one line, edited in place.
-- Report to the user: approved plan, the REQ order (ids only), and that
+- Return to req-develop: the approved plan, the REQ order (ids only), and that
   implementation is now open (`implement`).
 
 Refuse otherwise, naming the failing condition. Never flip `plan_approval`

@@ -25,8 +25,10 @@ phase needs.
   (the vision is the interview's subject) and **only** the latest CL entry and
   any `(awaiting)` entry — grep for `### CL-` and `(awaiting)`, do not read PART
   B whole. `02-business.md` front matter only.
-- **Authoring the BR (§6).** Now read every `(answered)` CL entry and the
-  existing `02-business.md` sections being rewritten.
+- **Authoring the BR (§6).** Now read PART B once — every answered round — and
+  the `02-business.md` sections being rewritten. This is the second legitimate
+  whole-document read in Phase 1: it happens once per BR revision, not once per
+  event.
 - **A term in play.** grep the canon (and `glossary_ref:`) for the term, its
   aliases and its id — never read the whole glossary, which is project-wide and
   keeps growing.
@@ -35,10 +37,17 @@ phase needs.
 - **`status`-style resume.** Front matter, the awaiting marker and the open
   questions from grep are enough; no body reads.
 
-Then derive: next CL number (max `CL-<n>` + 1), next G number (max `G-<nnn>` +
-1, zero-padded to 3), next S number (max `S-<nnn>` + 1, zero-padded to 3). If
-`stakeholders.md` is absent, create it with heading `# Stakeholders` and the
-registry table header.
+Then derive the next ids without reading either project-wide file to the end:
+
+```bash
+# next CL / G / S, without reading the file to the end
+grep -o 'CL-[0-9]*' 01-vision.md | grep -o '[0-9]*' | sort -n | tail -1
+grep -o 'G-[0-9]*' <canon> | grep -o '[0-9]*' | sort -n | tail -1
+grep -o 'S-[0-9]*' requirements/stakeholders.md | grep -o '[0-9]*' | sort -n | tail -1
+```
+
+Zero-pad to 3 for `G` and `S`, none for `CL`. If `stakeholders.md` is absent,
+create it with heading `# Stakeholders` and the registry table header.
 
 ## 2. Interpret the event
 
@@ -71,9 +80,9 @@ whole frontier in one round: number each question and give a recommended answer
 
 ## 4. Persist each round into PART B (append-only, composed once)
 
-Compose the round **once**. Append exactly that text to PART B, then present the
-same text to the user — do not write the questions for the file and again for
-the chat.
+Compose the round **once**. Append exactly that text to PART B and return the
+same text to req-workflow, which shows it to the user — do not write the
+questions for the file and again for the chat.
 
 ```markdown
 ### CL-<n> (awaiting) — <YYYY-MM-DD>
@@ -216,7 +225,7 @@ table header. One table, append-only:
 
 ## 9. Report back to req-workflow
 
-Return a compact result: BR composed (ready for `br_review`), resumed with a new
-`(awaiting)` CL, or an error. Name any open glossary conflict, the terms added
-to the canon, and the stakeholder rows added or changed. Do not write a
-user-facing report — req-workflow owns that.
+Return a compact result: the round text verbatim when a CL is awaiting answers
+(req-workflow shows it), BR composed (ready for `br_review`), or an error. Name
+any open glossary conflict, the terms added to the canon, and the stakeholder
+rows added or changed. Do not address the user — req-workflow owns that.

@@ -23,10 +23,12 @@ PCR. Cost rules R1–R6 from req-workflow apply.
   mapping, and this is the one event that legitimately needs all of it. Do not
   read `01-vision.md`: sources already reach you through the BRs' `traces to`
   lines.
-- `freeze`: read front matter of `03-technical.yaml` and `02-business.md`, the
-  YAML `glossary` block (it is small), then grep the ledger for `(unresolved)`
-  and the terms slice for the disputed term. Do not re-read the generated REQ
-  set.
+- `freeze`: read the top-level keys of `03-technical.yaml`, its `glossary`
+  block, and the **Terms Used in This PCR** slice of `02-business.md` — both are
+  small and bounded, and the slice is what the conflict check compares against
+  the canon. Resolve every `G-<nnn>` in the slice by grepping the canon, then
+  grep the ledger in the record's `02-business.md` for `(unresolved)`. Do not
+  re-read the generated REQ set.
 - Glossary: grep the canon named by the registry header (`glossary:`, default
   `requirements/glossary.md`, plus read-only `glossary_ref:`) for each term in
   play. Never read it whole.
@@ -110,10 +112,10 @@ Map every business requirement to REQ entries.
   `python3 -c "import yaml; yaml.safe_load(open('<path>'))"` must exit 0 and
   print nothing. Never `cat` the result, never re-read it to "check" — a parse
   error is the only signal you need.
-- Coverage report to the user: BR→REQ mapping as a two-column table of ids, plus
-  orphans, non-verifiable acceptance criteria, unresolved assumptions carried as
-  guards, glossary terms included and any open conflict. Ids and counts only —
-  no restating descriptions.
+- Coverage report: return it to req-workflow, which shows it — BR→REQ mapping as
+  a two-column table of ids, plus orphans, non-verifiable acceptance criteria,
+  unresolved assumptions carried as guards, glossary terms included and any open
+  conflict. Ids and counts only — no restating descriptions.
 - Do not modify `01-vision.md` or `02-business.md`.
 
 ## Event: freeze — seal

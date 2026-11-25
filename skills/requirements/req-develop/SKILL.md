@@ -4,9 +4,9 @@ description:
   "State machine for developing a frozen contract (03-technical.yaml, status:
   frozen): plan from the frozen spec, require plan approval, guard each
   implementation step, gate completion on verification evidence. The single entry
-  point for Phase 2 — /develop routes here, as do 'write a plan', 'plan
-  approved', 'implement REQ-010', 'REQ-013 is done', 'all REQs closed'. Not for
-  requirements shaping."
+  point for Phase 2 — /develop routes here, as do 'let's continue', 'write a
+  plan', 'plan approved', 'implement REQ-010', 'PCR-0001 status', 'all REQs
+  closed'. Not for requirements shaping."
 metadata:
   protected: "true"
   copyright: "© 2026 github.com/gothchibjo"
@@ -52,22 +52,24 @@ transient state set by req-guards on a guard violation and left via `resume`).
 
 ## 2. Read state before acting — metadata only
 
-Read `01-vision.md` `status`, `03-technical.yaml` front matter and
-`pipeline_gates`, and `04-plan.md` front matter. Get the open REQ ids by
-grepping the evidence matrix rather than reading the plan. The REQ bodies belong
-to the phase that works on that REQ.
+Read `01-vision.md` `status`, the top-level keys of `03-technical.yaml` and
+`pipeline_gates`, and `04-plan.md` front matter. Open REQs = every id from
+`grep -n 'id: REQ-' 03-technical.yaml` minus the ids that already carry a
+`done`/`waived` row in the Evidence Matrix — planned-but-unstarted REQs have no
+matrix row, so the matrix alone cannot answer it. The REQ bodies belong to the
+phase that works on that REQ.
 
 ## 3. Classify the event (priority order)
 
-| User phrase →                                       | Event        | Valid from                | Result                                                        |
-| :-------------------------------------------------- | :----------- | :------------------------ | :------------------------------------------------------------ |
-| plan / plan the development / write a plan          | plan         | — (record must be frozen) | planning (04-plan.md written from the frozen spec)            |
-| plan looks good / plan approved / I approve         | plan_approve | planning                  | plan_approved (`plan_approval` gate passed)                   |
-| implement / start / continue / work on REQ-00x (…)  | implement    | plan_approved, blocked    | implementing (guards pre-checked by req-guards)               |
-| blockers cleared / conditions met / resume          | resume       | blocked                   | implementing (guards re-checked; stays blocked while failing) |
-| REQ-00x is done / here is the evidence / verify (…) | verify       | implementing              | verifying (req-verification builds the evidence matrix)       |
-| all REQs closed / contract complete / finish        | complete     | verifying                 | done (`verification_evidence` gate passed)                    |
-| status / what's next                                | status       | any                       | —                                                             |
+| User phrase →                                       | Event        | Valid from                         | Result                                                        |
+| :-------------------------------------------------- | :----------- | :--------------------------------- | :------------------------------------------------------------ |
+| plan / plan the development / write a plan          | plan         | — (record must be frozen)          | planning (04-plan.md written from the frozen spec)            |
+| plan looks good / plan approved / I approve         | plan_approve | planning                           | plan_approved (`plan_approval` gate passed)                   |
+| implement / start / continue / work on REQ-00x (…)  | implement    | plan_approved, blocked, verifying¹ | implementing (guards pre-checked by req-guards)               |
+| blockers cleared / conditions met / resume          | resume       | blocked                            | implementing (guards re-checked; stays blocked while failing) |
+| REQ-00x is done / here is the evidence / verify (…) | verify       | implementing                       | verifying (req-verification builds the evidence matrix)       |
+| all REQs closed / contract complete / finish        | complete     | verifying                          | done (`verification_evidence` gate passed)                    |
+| status / what's next                                | status       | any                                | —                                                             |
 
 Unrecognized message against a frozen record: infer the most consistent event;
 if the transition is illegal, refuse and list the legal events — never silently
@@ -75,6 +77,11 @@ coerce. The table is enforced, not advisory.
 
 A message naming several REQs is one event with several REQs, not a loop of
 events: the phase checks and records them in one pass over the contract.
+
+¹ `verifying` is an interleaved state, not a terminal one: once `verify` has
+run, `implement` is still legal while REQs remain open, and returns the record
+to `implementing`. `complete` is the only way to close the contract from
+`verifying`.
 
 Invariants: development never runs while `01-vision.md` is not `frozen`; it
 never edits `03-technical.yaml` beyond the `pipeline_gates` flags; any deviation
@@ -95,9 +102,10 @@ in the dispatch — the phase reads the REQ blocks it needs.
   worked on. If blocked, status `blocked`; else `implementing`.
 - `resume` → `req-guards`; it re-checks guards and sets `implementing` again, or
   keeps `blocked`.
-- `verify` → `req-verification`; it builds the evidence matrix and closes REQs.
+- `verify` → `req-verification`; it appends the evidence, sets `04-plan.md`
+  `status: verifying`, and closes the REQs it has evidence for.
 - `complete` → `req-verification`; it flips `verification_evidence` and sets
-  `done` only when every REQ has matching evidence.
+  `done` only when every REQ has matching evidence and all four gates are true.
 - `status` → skip dispatch, report from §2 metadata and stop.
 
 Development never writes to `01-vision.md` or `02-business.md`, and never
@@ -105,28 +113,27 @@ commits.
 
 ## 5. Report — once per event
 
-The phase returns a compact result; you give the user: record path, development
-state, the REQs in scope with their status, gate status (`plan_approval`,
-`guard_conditions`, `verification_evidence`), and the next legal action. Always
-end with the record path (e.g. `requirements/PCR-0001-invoice-export/`).
+The phase returns a compact result: `outcome`, changed paths, blockers, and any
+text the user must see verbatim (coverage table, failing guards, traceability
+chain). Phases do not address the user; you relay that text and add: record
+path, development state, the REQs in scope with their status, gate status
+(`plan_approval`, `guard_conditions`, `verification_evidence`), and the next
+legal action. Always end with the record path (e.g.
+`requirements/PCR-0001-invoice-export/`).
 
 ## 6. Cost discipline
 
-The same rules as Phase 1, and the reason Phase 2 is where token cost explodes
-if they are ignored:
+Phase 1's discipline applies unchanged — sliced reads, edits in place, no echo,
+one report, batching, facts before subagents — with the Phase 2 slices:
 
-- **P1 Sliced reads.** One `implement REQ-010` reads the REQ-010 block and its
-  guards, the plan section for it, and the guard log — not the whole contract
-  and not the whole plan. Read `04-plan.md` front matter plus the named section.
-- **P2 Edit, never rewrite.** Guard-log and matrix rows are appended. Gate flags
-  are edited in place. Never regenerate `03-technical.yaml` or `04-plan.md`.
-- **P3 No echo.** Do not print what you wrote, and do not re-read the plan to
-  confirm a row landed — `git diff --stat` or a grep for the row is enough.
-- **P4 One report.** Phases return `outcome`, changed paths and blockers; only
-  this skill writes to the user.
-- **P5 Batch.** Several REQs in one event share one pass over the contract.
-- **P6 Facts, cheaply.** grep before subagent; a subagent answers in a short
-  digest and is never a way to read a file whose path is known.
+- **Read set.** An `implement REQ-0nn` reads that REQ's block (from
+  `id: REQ-0nn` up to the next `id:`), its `guard_conditions`, and the Guard
+  Log. Not the contract whole, not the plan body.
+- **Anchors.** `04-plan.md` has fixed `## Guard Log` and `## Evidence Matrix`
+  headings, written by req-plan. Locate a table by its heading, never by
+  grepping a bare REQ id — that also hits plan sections.
+- **Writes.** Guard-log and matrix rows are appended; gate flags are edited in
+  place. Never regenerate `03-technical.yaml` or `04-plan.md`.
 
 ## Notes
 

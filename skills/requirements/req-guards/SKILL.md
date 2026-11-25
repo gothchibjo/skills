@@ -14,16 +14,18 @@ metadata:
 # Phase: req-guards
 
 Called by req-develop with the event (`implement` | `resume`) and the target PCR
-plus the REQ ids in scope. Cost rules P1–P6 from req-develop apply.
+plus the REQ ids in scope. The cost discipline from req-develop applies.
 
 ## Inputs
 
 Read only what the check needs:
 
 - `04-plan.md` front matter (`status`);
-- the REQ block for each REQ in scope, from `03-technical.yaml` — grep the id
-  and read its `guard_conditions`, not the whole contract;
-- the Guard Log table, to avoid double-logging the same check.
+- the REQ block for each REQ in scope, from `03-technical.yaml` — grep
+  `id: REQ-0nn` and read to the next `id:`, then take its `guard_conditions`;
+- the `## Guard Log` table, to find which guards failed before;
+- for the pipeline flag in step 4: the full REQ id list
+  (`grep -n 'id: REQ-' 03-technical.yaml`) and the latest log row per REQ.
 
 Nothing else from the plan body or the contract.
 
@@ -35,24 +37,30 @@ Nothing else from the plan body or the contract.
 2. For each REQ in scope, take its `guard_conditions` from the frozen YAML and
    check each one in the repo/workspace right now. Several REQs in one event are
    checked in one pass.
-3. Append every check to the Guard Log in `04-plan.md`:
+3. Append every check to the Guard Log in `04-plan.md` — one row per check, in
+   the table under `## Guard Log`:
    ```markdown
    | date | REQ | guard | check | result (pass/fail) |
    ```
-   None fails → announce clean and start implementing; set `04-plan.md`
-   `status: implementing`. Any fails → set `status: blocked`, refuse to start,
-   and list every failing guard with its check evidence. Do NOT flip any gate.
-4. If all guard checks for the pipeline are clean at this point, edit
-   `pipeline_gates.guard_conditions.passed: true`. Whenever any guard is
-   failing, ensure it is `false`.
+   None fails → set `04-plan.md` `status: implementing` and start implementing.
+   Any fails → set `status: blocked`, refuse to start, and return every failing
+   guard with its check evidence. Do NOT flip any gate off a partial check.
+4. The pipeline flag `guard_conditions.passed` is true only when **every** REQ
+   in the contract carries a latest Guard Log result of `pass`. Compute it from
+   the id list and the log, not from the REQs in scope: a REQ that is unchecked,
+   or whose latest row is `fail`, keeps the flag `false` no matter how clean the
+   REQs in this event were.
 
 Do not print the REQ text or the guard list back; the log row is the record.
 
 ## Event: resume — re-check after a block
 
-Re-run the checks for the failed guards only. Still failing → keep
-`status: blocked` and restate what is unresolved; do not start. Clean → set
-`status: implementing` and report the blocked period was cleared.
+Re-run the checks for the guards that failed, and **append the re-check rows**:
+the log is append-only, and the last row for each guard must reflect the current
+verdict. Still failing → keep `status: blocked`, set
+`pipeline_gates.guard_conditions.passed: false`, and restate what is unresolved;
+do not start. Clean → set `status: implementing`, re-evaluate the pipeline flag
+by step 4, and return the cleared block to req-develop.
 
 ## Change control (REQ-015)
 

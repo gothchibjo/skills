@@ -4,9 +4,9 @@ description:
   "State machine for the requirements process in the active repo (requirements/):
   register a customer vision as a PCR, elicit clarifications, approve the
   business requirements, generate and freeze the technical spec. The single entry
-  point — /requirements routes here, as do 'new request', 'here are the answers',
-  'customer approved', 'tech spec', 'freeze PCR-0001'. Not for writing
-  application code."
+  point — /requirements routes here, as do 'new request', 'let's continue',
+  'here are the answers', 'PCR-0001 status', 'tech spec', 'freeze'. Not for
+  writing application code."
 metadata:
   protected: "true"
   copyright: "© 2026 github.com/gothchibjo"
@@ -58,13 +58,20 @@ Classification needs metadata, not documents. Read:
 - `01-vision.md` and `02-business.md` front matter (`status`);
 - the target PCR's registry row, and the `glossary:` / `glossary_ref:` keys in
   the registry header;
-- `03-technical.yaml` front matter and `pipeline_gates` only — never the
+- `03-technical.yaml` top-level keys and `pipeline_gates` only — never the
   `requirements[]` array.
 
-Pull the few markers a report needs (`(awaiting)`, `(unresolved)`) with grep
-instead of reading the log. Document bodies — PART A, PART B, the BR list, the
-REQ list — belong to the phase that consumes them. Reading them here charges
-every event twice for the same bytes.
+Pull the few markers a report needs with grep **scoped to the target record**,
+never `grep -r` (another PCR's markers are not this PCR's state):
+
+```bash
+grep -n '(awaiting)'   requirements/PCR-NNNN-<slug>/01-vision.md
+grep -n '(unresolved)' requirements/PCR-NNNN-<slug>/02-business.md
+```
+
+Document bodies — PART A, PART B, the BR list, the REQ list — belong to the
+phase that consumes them. Reading them here charges every event twice for the
+same bytes.
 
 ## 3. Classify the event (priority order)
 
@@ -116,11 +123,13 @@ After every transition update the registry row (`status`, `updated: <today>`).
 
 ## 5. Report — once per event
 
-The phase returns a compact result to this skill; the phase does not address the
-user. You give the user: record path, what just happened, current state, and the
-next legal action. Call out any open glossary conflict. Always end with the
-record path (e.g. `requirements/PCR-0001-invoice-export/`) so the process
-resumes trivially later.
+The phase returns a compact result: `outcome`, changed paths, blockers, and any
+text the user must see verbatim (a clarification round, a coverage table, a
+failing gate). Phases do not address the user themselves. You relay that text as
+written and add: record path, what just happened, current state, and the next
+legal action. Call out any open glossary conflict. Always end with the record
+path (e.g. `requirements/PCR-0001-invoice-export/`) so the process resumes
+trivially later.
 
 ## 6. Cost discipline
 
@@ -131,8 +140,9 @@ by reference instead of restating them.
   matter, one named section (grep for the heading or id), one REQ block, one
   table row. Never read a whole artifact to use one part of it.
 - **R2 Edit, never rewrite.** `02-business.md`, `03-technical.yaml` and every
-  append-only log are patched in place. Do not regenerate a document to change a
-  section, and never rewrite content you did not change.
+  append-only log are patched in place; never rewrite content you did not
+  change. The one exception is a full `technical` regeneration, which is one
+  whole-file write (see req-technical-spec).
 - **R3 No echo.** After writing, do not print or re-read the written content.
   Validate with a command whose output is a single line (a `yaml.safe_load` that
   prints nothing, a `git diff --stat`).

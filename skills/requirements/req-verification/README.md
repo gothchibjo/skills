@@ -20,17 +20,19 @@ the concrete artifact that proves it against the `verification.evidence` and
 | `manual-review` | A review verdict or traceability matrix    |
 | `simulation`    | A run artifact or logs                     |
 
-Rows are appended to the Evidence Matrix in `04-plan.md`:
+Rows are appended to the Evidence Matrix in `04-plan.md`, and `verify` is the
+event that moves the plan to `status: verifying`:
 
 ```markdown
-| REQ     | verification.method | evidence artifact          | status |
-| ------- | ------------------ | -------------------------- | ------ |
-| REQ-004 | test               | tests/e2e/export.spec.ts   | done   |
-| REQ-007 | manual-review      | review sign-off 2026-03-14 | waived |
+| REQ     | verification.method | evidence artifact          | status | reason (waived only) |
+| ------- | ------------------- | -------------------------- | ------ | -------------------- |
+| REQ-004 | test                | tests/e2e/export.spec.ts   | done   |                      |
+| REQ-007 | manual-review       | review sign-off 2026-03-14 | waived | superseded by v2.1  |
 ```
 
 **`complete` — close the gate.** Allowed only when every REQ in the frozen YAML
-has a `done` or explicitly `waived` row. It then flips
+has a `done` or explicitly `waived` row and all four `pipeline_gates` already
+read `passed: true`. It then flips
 `pipeline_gates.verification_evidence.passed: true`, sets `04-plan.md` to
 `done`, and appends the traceability chain
 `BR-<n> → REQ-<n> → evidence artifact` for every REQ.
