@@ -8,9 +8,10 @@ description:
   is empty author 02-business.md with atomic, concise, contradiction-free,
   MoSCoW-sorted business requirements traced to [V §x] and [CL-n]. Maintains the
   project glossary (requirements/glossary.md): appends new terms with stable
-  G-<nnn> ids and stops on a definition conflict instead of overwriting. Phase of
-  the req-workflow state machine; load only via the Skill tool from
-  req-workflow."
+  G-<nnn> ids and stops on a definition conflict instead of overwriting. Maintains
+  the project stakeholder registry (requirements/stakeholders.md) and the PCR's
+  own stakeholder slice with stable S-<nnn> ids. Phase of the req-workflow state
+  machine; load only via the Skill tool from req-workflow."
 disable-model-invocation: true
 metadata:
   protected: "true"
@@ -31,8 +32,13 @@ Read the project glossary too: the path from the registry header (`glossary:`,
 default `requirements/glossary.md`) plus `glossary_ref:` if present. The canon
 is append-only and writable; `glossary_ref:` is read-only and never written.
 
+Read `requirements/stakeholders.md` as well; if an older record predates it,
+create it with heading `# Stakeholders` and the registry table header.
+
 - Next CL number = max existing `CL-<n>` + 1.
 - Next G number = max existing `G-<nnn>` in the canon + 1, zero-padded to 3.
+- Next S number = max existing `S-<nnn>` in the stakeholder registry + 1,
+  zero-padded to 3.
 - Note any `CL-<n> (awaiting)` entries: questions already asked, answers not yet
   recorded (a previous session stopped there).
 
@@ -57,6 +63,9 @@ whole frontier in one round: number each question and give a recommended answer
 - A term that the canon or `glossary_ref:` defines differently (same term or
   alias, other meaning) is a contradiction: ask a numbered question quoting both
   definitions. Never resolve it by overwriting the canon.
+- Who is affected, who decides, who can block, and what each wants from this
+  change are domain decisions: ask them. Never infer a person's role or
+  authority.
 - Nothing is ignored silently: ambiguity, contradiction, and missing detail all
   become questions. Deliver and record each round fully.
 
@@ -92,7 +101,19 @@ Front matter: `status: proposed`, `revised: <today>`, `revisions: []` (keep
 `pcr`, `based_on`, `approved_by/at` fields). Sections:
 
 - **Context & Goals** — 2–5 crisp sentences.
-- **Stakeholders** — actors and their interests.
+- **Stakeholders for This Change** — only those who matter here, one line each.
+  New actors are added to the registry first (§8), so every row carries an
+  `S-<nnn>` id; the requester from `01-vision.md` must appear.
+
+  ```markdown
+  | id    | actor       | interest in this change               | position |
+  | :---- | :---------- | :------------------------------------ | :------- |
+  | S-001 | Бухгалтерия | Нужен экспорт с НДС, иначе не подпишет | blocks   |
+  ```
+
+  `position`: `supports | neutral | blocks`. Identity, role and authority live
+  in the registry (§8), not here.
+
 - **Terms Used in This PCR** — the slice this PCR relies on, one line each. New
   terms are appended to the canon first (§7), so every row here carries a
   `G-<nnn>` id. Definitions are copied from the canon as of authoring: this copy
@@ -160,8 +181,33 @@ table header. One table, append-only:
 - Write definitions in `artifact_language`; keep the term in the customer's
   words and put synonyms in `aliases`. Never write `glossary_ref:`.
 
-## 8. Report back to req-workflow
+## 8. Maintain the stakeholder registry
+
+`requirements/stakeholders.md`, one table. Rows are immutable except `status`:
+
+```markdown
+| id    | actor       | role         | type     | authority      | status | source              |
+| :---- | :---------- | :----------- | :------- | :------------- | :----- | :------------------ |
+| S-001 | Бухгалтерия | finance team | internal | decision-maker | active | PCR-0001/2026-11-25 |
+```
+
+- `type`: `internal | external`; `authority`:
+  `decision-maker | influencer | recipient | blocker`; `status`:
+  `active | inactive | superseded-by S-<nnn>`. Role, type and authority are
+  decisions — ask, never guess. `source` is `PCR-<nnnn>/<today>`.
+- Match actors by name, case-insensitively. An actor already present with the
+  same role and authority is referenced by id, never re-added.
+- A changed role or authority is not an edit: after the user confirms, append
+  the new row and flip the old one to `superseded-by S-<nnn>`. A person leaving
+  is `inactive`, never a deletion.
+- Every `S-<nnn>` in the PCR slice must exist in the registry. A duplicate actor
+  with conflicting role or authority is a warning, not a block: report it and
+  ask which row is current.
+- Approval authority is the one hard check, and it belongs to req-workflow's
+  `approve` step, not here.
+
+## 9. Report back to req-workflow
 
 Report the outcome: BR composed (ready for `br_review`), resumed with a new
-`(awaiting)` CL, or an error. Name any open glossary conflict and the terms
-added to the canon.
+`(awaiting)` CL, or an error. Name any open glossary conflict, the terms added
+to the canon, and the stakeholder rows added or changed.

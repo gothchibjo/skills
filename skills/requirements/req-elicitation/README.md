@@ -25,9 +25,9 @@ to `(answered)`, then the next round is asked. Nothing is dropped silently:
 ambiguity, contradiction and missing detail all become questions.
 
 Once the frontier is empty it stops asking and authors `02-business.md`: Context
-& Goals, Stakeholders, Terms Used in This PCR, **Assumptions Ledger**,
-Non-Goals, and the atomic BRs sorted `must` → `should` → `could`, each traced to
-`[V §x]` and `[CL-n]`.
+& Goals, Stakeholders for This Change, Terms Used in This PCR, **Assumptions
+Ledger**, Non-Goals, and the atomic BRs sorted `must` → `should` → `could`, each
+traced to `[V §x]` and `[CL-n]`.
 
 Terms are maintained in two places on purpose. `requirements/glossary.md` is the
 project-wide canon: new terms are appended there with stable `G-<nnn>` ids, and
@@ -35,6 +35,12 @@ existing ones are referenced by id. A term found only in a read-only
 `glossary_ref:` is copied into the canon on first use. The PCR keeps a snapshot
 of the definitions it uses — the copy is the seal, so later canon edits cannot
 change a frozen contract.
+
+Stakeholders follow the same split without the seal.
+`requirements/stakeholders.md` is the project roster (`S-<nnn>`: actor, role,
+type, authority, status); the PCR records only the actors this change concerns,
+what each wants and whether they support, are neutral or block. Identity is
+never re-described per PCR.
 
 ## Design decisions worth knowing
 
@@ -62,6 +68,10 @@ change a frozen contract.
   ledger entry, and that entry blocks freeze. Reshaping a definition requires
   your explicit answer; the canon is append-only and old rows only change
   `status` (`superseded-by G-<nnn>`).
+- **Stakeholder identity is asked, not inferred.** Role, type and authority are
+  decisions, so they become questions. The registry row is immutable apart from
+  `status`: a changed role appends a new `S-<nnn>` and supersedes the old row; a
+  departure is `inactive`, never a deletion.
 
 ## Install
 
@@ -83,6 +93,7 @@ See [docs/installation.md] for alternative installation methods.
 | BR is marked `proposed`, not approved        | Expected. Approval is your explicit action, never inferred.                                 |
 | An `(unresolved)` item blocks freeze         | Resolve it in the Assumptions Ledger, or accept that freeze will refuse.                    |
 | It stopped on a term you thought was defined | The canon defines it differently. Answer the question; the definition is never overwritten. |
+| The requester is missing from the slice      | It must appear there. Add the row; the requester is never implied.                          |
 
 ## License
 

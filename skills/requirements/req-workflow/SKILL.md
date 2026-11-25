@@ -32,11 +32,16 @@ memory: any session can pick a PCR back up by reading the files.
 - `requirements/glossary.md` — project-wide canonical glossary, append-only,
   `G-<nnn>` ids. Written in Phase 1 by req-elicitation; never written in
   Phase 2.
+- `requirements/stakeholders.md` — project-wide stakeholder registry, `S-<nnn>`
+  ids; rows are immutable except `status`
+  (`active | inactive | superseded-by S-<nnn>`). Fixed path: req-register
+  creates the table, req-elicitation fills it.
 - `requirements/PCR-NNNN-<slug>/01-vision.md` — canonical record `status` in
   front matter + PART A (verbatim vision, immutable) + PART B (Clarification
   Log, append-only).
 - `.../02-business.md` — the BR document: `draft → proposed → approved`,
-  `revisions[]`, `approved_by/at`, plus the Terms Used in This PCR slice.
+  `revisions[]`, `approved_by/at`, plus the Terms Used in This PCR and
+  Stakeholders for This Change slices.
 - `.../03-technical.yaml` — machine-readable technical spec: `draft → frozen`;
   carries the 4 pipeline gates.
 
@@ -55,8 +60,9 @@ memory: any session can pick a PCR back up by reading the files.
 ## 2. Read state before acting
 
 Record status, business status, the last CL marker in PART B, the unresolved
-count in the Assumptions Ledger (glossary conflicts are recorded there too), and
-the glossary paths from the registry header.
+count in the Assumptions Ledger (glossary conflicts are recorded there too), the
+glossary paths from the registry header, and the registry rows for the requester
+and the approver.
 
 ## 3. Classify the event (priority order)
 
@@ -89,8 +95,12 @@ any pasted answers/revisions/vision text.
   status `elicitation`.
 - `continue` / `answers` → `req-elicitation`; if it reports the BR was composed,
   set status `br_review`.
-- `approve` → in `02-business.md` set `status: approved`, `approved_by`,
-  `approved_at`; status `br_approved`.
+- `approve` → first resolve who is approving against
+  `requirements/stakeholders.md`: the named actor must match exactly one active
+  row with `authority: decision-maker`. No name, no match, several matches, or a
+  non-decision-maker → stop and ask; add or correct the row from the answer,
+  never guess. Then set `status: approved`, `approved_by: <actor> (S-<nnn>)`,
+  `approved_at` in `02-business.md`; status `br_approved`.
 - `feedback` → in `02-business.md` append to `revisions` `{at, by, note}`, set
   `status: proposed`; record status `br_review`; route content to
   `req-elicitation` only if BR wording needs rework.
@@ -124,3 +134,7 @@ trivially later.
   Phase 2 fails a guard (`blocked`) and, if the meaning must change, returns
   here as a new PCR. `glossary_ref:` is read-only — the pipeline never writes
   it.
+- Stakeholder inconsistencies are warnings, with one exception: ambiguous
+  approval authority stops `approve`. A duplicate actor row, an inactive
+  participant or conflicting positions are reported and asked, never blocking.
+  The registry is a roster, not history: rows change only by `status`.

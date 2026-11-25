@@ -23,6 +23,8 @@ loaded only through the state machine.
   header: `glossary:` for the writable canon (default
   `requirements/glossary.md`) and `glossary_ref:` for an existing glossary
   elsewhere, which stays read-only.
+- Creates `requirements/stakeholders.md` at a fixed path with an empty registry
+  table (`S-<nnn>`); req-elicitation fills the rows.
 - Adds the row to the registry in `requirements/README.md`.
 
 ## The split check
@@ -51,6 +53,9 @@ registers it as one PCR.
   a glossary, it is recorded as `glossary_ref:` and consulted read-only; the
   pipeline writes only its own canon, so a team's documentation is never
   rewritten behind its back.
+- **Stakeholders are the one registry without an external form.** A fixed
+  `requirements/stakeholders.md` keeps identity, role and authority in one
+  place; the PCR holds only what each actor wants from that change.
 
 ## Install
 

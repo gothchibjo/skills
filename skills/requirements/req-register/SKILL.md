@@ -5,7 +5,8 @@ description:
   verbatim as PART A of requirements/PCR-NNNN-<slug>/01-vision.md, open an empty
   PART B Clarification Log, write skeletons of 02-business.md and
   03-technical.yaml, confirm the project glossary paths in
-  requirements/README.md, and add the PCR row to the registry. Phase of the
+  requirements/README.md, create the project stakeholder registry, and add the
+  PCR row to the requirements registry. Phase of the
   req-workflow state machine; load only via the Skill tool from req-workflow,
   never on your own."
 disable-model-invocation: true
@@ -37,6 +38,10 @@ file path) and any metadata the user already gave.
     `docs/domain-glossary.md`. A hit under `requirements/` becomes `glossary:`;
     any other hit becomes `glossary_ref:` while `glossary:` stays
     `requirements/glossary.md`. Write both keys into the header.
+- Stakeholders = `R/requirements/stakeholders.md`; create if absent with heading
+  `# Stakeholders` and a table
+  `| id | actor | role | type | authority | status | source |`. Fixed path, no
+  discovery and no external reference: req-elicitation fills the rows.
 
 ## 2. Allocate the PCR id
 
@@ -113,7 +118,7 @@ as one PCR.
 
   # Context & Goals
 
-  # Stakeholders
+  # Stakeholders for This Change
 
   # Terms Used in This PCR
 
@@ -142,6 +147,6 @@ as one PCR.
 
 ## 6. Report back to req-workflow
 
-Return `pcr`, the record folder path, `slug`, the resolved glossary paths, and
-the note that the next event is elicitation round 1 (fresh record, PART B
-empty).
+Return `pcr`, the record folder path, `slug`, the resolved glossary paths, the
+stakeholder registry path, and the note that the next event is elicitation round
+1 (fresh record, PART B empty).
