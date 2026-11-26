@@ -69,8 +69,24 @@ onto every reader. Do not use a `.claude-plugin` manifest to work around this.
 The CLI's other discovery roots — `.agents/skills/`, `.claude/skills/` and the
 rest — are install targets, not places to author skills in.
 
+## Adding an agent
+
+1. `agents/<name>.md`, with `description` and `mode` in the frontmatter. The
+   body is the system prompt; the frontmatter holds permissions and limits.
+2. `agents/README.md` — documentation for humans: what it does, how to invoke
+   it, install, troubleshooting. With more than one agent, give each a section
+   or a sibling `<name>.README.md`.
+3. Add it to the Agents table in the root [README.md].
+4. Add the copy step to [docs/installation.md]; the `skills` CLI does not
+   install agents.
+
+An agent is not a skill: it lives at the repository root so it is never mistaken
+for one, and it is installed by copying the file into `agents/` under the
+OpenCode config or project directory.
+
 <!-- refs -->
 
 [THIRD_PARTY_NOTICES.md]: THIRD_PARTY_NOTICES.md
 [commit]: skills/commit/
 [README.md]: README.md
+[docs/installation.md]: docs/installation.md

@@ -104,6 +104,19 @@ these — they are a few lines each and trivially copied by hand.
 | `/observer`     | `pattern-observer` | Find repeated work worth a skill.     |
 | `/gardener`     | `skill-gardener`   | Archive and restore skills by usage.  |
 
+## Agents
+
+OpenCode subagent definitions live in [agents/]. They are not skills: the
+`skills` CLI does not install them, so copy the file by hand — same as the
+command wrappers.
+
+| Agent      | Mode       | Access    | Purpose                                                                 |
+| :--------- | :--------- | :-------- | :---------------------------------------------------------------------- |
+| [reviewer] | `subagent` | read-only | Independent review of code, docs, requirements, architecture, processes |
+
+**[agents/README.md]** — what it reviews, how findings are reported, how to
+install and adapt it.
+
 ## License
 
 MIT. See [LICENSE]. Vendored third-party skills keep their own copyrights in
@@ -131,4 +144,7 @@ MIT. See [LICENSE]. Vendored third-party skills keep their own copyrights in
 [skill-gardener]: skills/skill-gardener/
 [skills/requirements/README.md]: skills/requirements/README.md
 [command/]: command/
+[agents/]: agents/
+[reviewer]: agents/reviewer.md
+[agents/README.md]: agents/README.md
 [LICENSE]: LICENSE

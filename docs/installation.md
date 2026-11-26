@@ -108,6 +108,31 @@ done
 
 Each one is a few lines: a description and a pointer to the matching skill.
 
+## Agents are not installed by the CLI
+
+[agents/] holds OpenCode subagent definitions — Markdown files with a
+frontmatter block and the system prompt as the body. The `skills` CLI installs
+skills only, so copy the agent by hand:
+
+```bash
+REPO=https://raw.githubusercontent.com/gothchibjo/skills/main
+mkdir -p ~/.config/opencode/agents
+curl -fsSL "$REPO/agents/reviewer.md" \
+  -o ~/.config/opencode/agents/reviewer.md
+```
+
+For a project-local agent, write the same file to `.opencode/agents/` and commit
+it with the project. To develop the agent from a checkout, symlink it:
+
+```bash
+REPO=~/Documents/GitHub/gothchibjo/skills
+ln -s "$REPO/agents/reviewer.md" ~/.config/opencode/agents/reviewer.md
+```
+
+OpenCode scans the agents directory at session start. A file that does not
+appear as a subagent is in the wrong directory or has invalid YAML frontmatter.
+See [agents/README.md] for the reviewer's behaviour and configuration.
+
 ## Verifying an install
 
 ```bash
@@ -131,4 +156,6 @@ its gates.
 
 [Agent Skills spec]: https://agentskills.io
 [command/]: ../command/
+[agents/]: ../agents/
+[agents/README.md]: ../agents/README.md
 [README]: ../README.md
