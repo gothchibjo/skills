@@ -1,13 +1,19 @@
 # commit
 
-Generate a Conventional Commits-style commit message from the currently staged
-changes and commit it.
+Generate a Conventional Commits-style commit message from the current changes
+and commit it — or, in plan mode, just produce the message.
 
 ## What it does
 
-The skill reads `git diff --staged`, works out what actually changed and why,
-and produces a message with a summary line, a bullet list of key changes and a
-short purpose paragraph — then commits it.
+The skill reads the diff, works out what actually changed and why, and produces
+a message with a summary line, a bullet list of key changes and a short purpose
+paragraph. What happens next depends on the session mode:
+
+- **Plan mode** is read-only. The skill prints the message and stops: nothing is
+  staged, committed or pushed, even with `push`. You review the message, switch
+  to build mode and commit there.
+- **Build mode** prints the message and commits it in one go. The printed
+  message is the record of what was committed, not an approval gate.
 
 ```text
 type(scope): imperative summary
@@ -28,6 +34,8 @@ Message rules:
 - The body is **always** required, even for small or merge commits.
 - Breaking changes get `!` after the type/scope and/or a `BREAKING CHANGE:`
   footer.
+- The format is the default. Project instructions the harness has loaded win
+  over it, and so does the style of the last ~10 subjects in `git log`.
 
 ## When to use
 
@@ -41,25 +49,29 @@ conventions.
 Installed as a skill it can be invoked directly by name, or through the
 `/commit` command in [opencode]:
 
-| Invocation     | Behaviour                          |
-| :------------- | :--------------------------------- |
-| `/commit`      | generate the message and commit    |
-| `/commit push` | generate the message, commit, push |
+| Invocation              | Behaviour                                      |
+| :---------------------- | :--------------------------------------------- |
+| `/commit` in plan mode  | prints the message, changes nothing            |
+| `/commit` in build mode | prints the message and commits                 |
+| `/commit push` in build | prints the message, commits, pushes            |
+| `/commit push` in plan  | prints the message, commits and pushes nothing |
 
 ## Behaviour worth knowing
 
-- **Only staged changes are committed.** The skill never runs `git add` to pull
-  unstaged or untracked files into the commit. The single exception: if the
-  staging area is completely empty, it runs `git add -A` rather than stopping to
-  ask.
+- **Plan mode touches nothing.** No `git add`, no `git commit`, no `git push`,
+  and no index changes of any kind. The message is the whole deliverable.
+- **Only staged changes are committed.** Once the index has content, the skill
+  never runs `git add` to pull unstaged or untracked files into the commit. The
+  single exception is build mode with a completely empty staging area: there it
+  runs `git add -A` rather than stopping to ask.
 - **Large diffs are summarised, not transcribed.** Above roughly 500 lines the
   skill switches to `git diff --staged --stat` first and writes 3–5 bullets
   grouped by logical change, not one bullet per file.
 - **Ambiguous scope is escalated.** If the diff spans genuinely distinct areas
   and the scope is not obvious, the skill lists the areas and asks before
   committing.
-- **The message is shown before it is used** in a code block, so you can see
-  what is being committed.
+- **Hooks are respected.** A rejected commit is fixed and retried as a new
+  commit; the skill never reaches for `--amend` or `--no-verify`.
 
 ## Install
 
@@ -72,12 +84,14 @@ npx skills add gothchibjo/skills --skill commit -a opencode
 
 ## Troubleshooting
 
-| Symptom                                      | Fix                                                                                                                                         |
-| :------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/commit` is not found                       | The `command/` wrappers are not installed by the `skills` CLI. Copy `command/commit.md` to `~/.config/opencode/command/commit.md` yourself. |
-| Scope does not match what you want           | Say the scope explicitly when asking, or rename the top-level directory.                                                                    |
-| The message is too generic                   | The diff was ambiguous, so was the message. State the intent in the request.                                                                |
-| A staged lockfile bump dominates the bullets | It does not, unless it is the only change. Ask for a re-draft if it looks wrong.                                                            |
+| Symptom                                    | Fix                                                                                                              |
+| :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| `/commit` is not found                     | The `command/` wrappers are not installed by the `skills` CLI. Copy `command/commit.md` to your config yourself. |
+| The commit has files I did not stage       | The index was empty, so build mode staged everything. Stage files explicitly next time.                          |
+| `/commit push` in plan mode did nothing    | Intended: plan mode changes nothing. Switch to build mode and run it again.                                      |
+| Scope does not match what you want         | Say the scope explicitly when asking, or rename the top-level directory.                                         |
+| The message misses why the change was made | The skill reads the diff, not your reasoning. State the intent in the request.                                   |
+| The message is too generic                 | The diff was ambiguous. Say what the change is for.                                                              |
 
 ## License
 

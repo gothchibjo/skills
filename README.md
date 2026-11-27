@@ -45,7 +45,7 @@ the [Agent Skills spec] can run them.
 
 | Skill                | Model          | Command         | What it does                                                                                                                                                 |
 | :------------------- | :------------- | :-------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [commit]             | may pick it up | `/commit`       | Conventional Commits message from the staged diff, matching the project's own commit style, then commits.                                                    |
+| [commit]             | may pick it up | `/commit`       | Conventional Commits message from the diff, then commits.                                                                                                    |
 | [grill-me]           | never          |                 | Relentless interview to sharpen a plan or design. Vendored from mattpocock/skills.                                                                           |
 | [grilling]           | may pick it up |                 | The reusable interview primitive behind `grill-me`. Vendored from mattpocock/skills.                                                                         |
 | [merge-request]      | never          | `/mr`           | Opens a merge/pull request from the current branch to the default or given branch, with a commit-style title and description.                                |
@@ -95,14 +95,14 @@ OpenCode command wrappers live in [command/]. The `skills` CLI does not install
 these — they are a few lines each and trivially copied by hand.
 `docs/installation.md` has the one-liner.
 
-| Command         | Skill              | Purpose                               |
-| :-------------- | :----------------- | :------------------------------------ |
-| `/commit`       | `commit`           | Generate a commit message and commit. |
-| `/mr`           | `merge-request`    | Open a merge request for the branch.  |
-| `/requirements` | `req-workflow`     | Drive the requirements state machine. |
-| `/develop`      | `req-develop`      | Drive the development state machine.  |
-| `/observer`     | `pattern-observer` | Find repeated work worth a skill.     |
-| `/gardener`     | `skill-gardener`   | Archive and restore skills by usage.  |
+| Command          | Skill              | Purpose                               |
+| :--------------- | :----------------- | :------------------------------------ |
+| `/commit [push]` | `commit`           | Generate a commit message and commit. |
+| `/mr`            | `merge-request`    | Open a merge request for the branch.  |
+| `/requirements`  | `req-workflow`     | Drive the requirements state machine. |
+| `/develop`       | `req-develop`      | Drive the development state machine.  |
+| `/observer`      | `pattern-observer` | Find repeated work worth a skill.     |
+| `/gardener`      | `skill-gardener`   | Archive and restore skills by usage.  |
 
 ## Agents
 
