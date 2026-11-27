@@ -95,14 +95,14 @@ OpenCode command wrappers live in [command/]. The `skills` CLI does not install
 these — they are a few lines each and trivially copied by hand.
 `docs/installation.md` has the one-liner.
 
-| Command          | Skill              | Purpose                               |
-| :--------------- | :----------------- | :------------------------------------ |
-| `/commit [push]` | `commit`           | Generate a commit message and commit. |
-| `/mr`            | `merge-request`    | Open a merge request for the branch.  |
-| `/requirements`  | `req-workflow`     | Drive the requirements state machine. |
-| `/develop`       | `req-develop`      | Drive the development state machine.  |
-| `/observer`      | `pattern-observer` | Find repeated work worth a skill.     |
-| `/gardener`      | `skill-gardener`   | Archive and restore skills by usage.  |
+| Command          | Skill              | Purpose                                      |
+| :--------------- | :----------------- | :------------------------------------------- |
+| `/commit [push]` | `commit`           | Generate a commit message and commit.        |
+| `/mr [target]`   | `merge-request`    | Open a merge request for the current branch. |
+| `/requirements`  | `req-workflow`     | Drive the requirements state machine.        |
+| `/develop`       | `req-develop`      | Drive the development state machine.         |
+| `/observer`      | `pattern-observer` | Find repeated work worth a skill.            |
+| `/gardener`      | `skill-gardener`   | Archive and restore skills by usage.         |
 
 ## Agents
 
