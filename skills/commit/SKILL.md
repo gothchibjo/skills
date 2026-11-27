@@ -2,7 +2,7 @@
 name: commit
 description: "Commit staged changes with a Conventional Commits message: type(scope): summary, bullet body, purpose paragraph. Use when the user asks to commit, to write or review a commit message, or says \"commit this\". Arguments: no args — commit; push — commit and push. In plan mode only the message is produced."
 metadata:
-  protected: "false"
+  protected: "true"
   copyright: "© 2026 github.com/gothchibjo"
 ---
 
